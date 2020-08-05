@@ -1,0 +1,543 @@
+* {
+    box-sizing: border-box;
+}
+
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100%;
+    position: relative;
+    margin:0px;
+}
+
+header {
+    text-align: center;
+}
+
+/*li {
+    display: inline;
+    padding: 5px;
+}*/
+
+a {
+    text-decoration: none;
+    color: blue;
+}
+
+a:hover { color : red;}
+
+hr {
+    width: 100%;
+    height:4px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: darkblue;
+    border: 0 none;
+}
+
+input[type=text], input[type=password], input[type=date], input[type=month], input[type=year] {
+    width: 100%;
+    padding: 7px;
+    margin: 5px 0 10px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+.top-container {
+    background: #ccc;
+    padding:5px;
+    border-bottom:0px solid #0f0f0f;
+}
+
+.bottom-container {
+    background: #333;
+    padding:0px;
+    border-top:2px solid #0f0f0f;
+    /*position:fixed;*/
+    bottom:0;
+    width:100%;
+}
+
+
+/*.bottom-container {
+    background: #333;
+    padding:5px;
+    border-top:2px solid #0f0f0f;
+    position:absolute;
+    bottom: -50px;
+    height: 50px;
+    color: white;
+    margin-top: 10px;
+    text-align: center;
+}*/
+
+.container-term {
+    width:80%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+footer {
+    text-align: center;
+    height: 50px;
+    color: white;
+    padding: 5px;
+    margin-top: 10px;
+    bottom: 0px;
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    color: black;
+    /*padding: 16px 10px;*/
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 40%;
+    opacity: 0.9;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 50px;
+    display:table-cell;
+    font-size: 150%;
+    vertical-align:middle;
+}
+
+.btn-submit .btn-enroll {
+    font-size: 100%
+}
+
+.btn-submit:hover {
+    opacity: 1;
+}
+
+.error-message {
+    color: red;
+}
+
+/*Top Navigation*/
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover, .dropdown button:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: rgb(76, 175, 80, 0.8);
+  color: white;
+}
+
+.topnav .float-right {
+  float: right;
+}
+
+/*Todo Top Navigation*/
+
+.todotopnav {
+  overflow: hidden;
+  background-color: rgb(76, 175, 80, 0.8);
+}
+
+.todotopnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.todotopnav a:hover, .dropdown button:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.todotopnav a.active {
+  background-color: rgb(76, 175, 80, 1);
+  color: black;
+}
+
+.todotopnav .float-right {
+  float: right;
+}
+
+.nav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.dropdown-content {
+  display: none;
+  position: fixed;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.container1 container {
+  position: relative;
+  text-align: center;
+  color: black;
+  height: 80%;
+  width: 50%;
+}
+
+.centered {
+  position: absolute;
+  top: 87%;
+  left: 50%;
+  width: 80%;
+  height: 1125px;
+  transform: translate(-50%, -50%);
+}
+
+/*.sidenav .container{
+  height: 100%;
+  width: 160px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.tree_nav_container {
+    width: 100%;
+    overflow: auto;
+    z-index: 1
+}
+
+.tree_nav_container .tree_panel_cell {
+    border-right: 1px solid #e4e7ea;
+    padding-left: 3px;
+    float: left;
+}*/
+
+.addtask {
+    background-color: #4CAF50;
+    padding: 5px 40px;
+    color: white;
+    text-align: center;
+}
+
+.addtask:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.addTaskBtn {
+  /*padding: 10px;
+  width: 25%;
+  background: #d9d9d9;
+  color: #555;
+  float: left;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;*/
+
+  background-color: #d9d9d9;
+  text-align: center;
+    color: black;
+    cursor: pointer;
+    /*transition: 0.3s;*/
+    margin: 8px 0;
+    border: none;
+    /*cursor: pointer;*/
+    width: 40%;
+    /*opacity: 0.9;*/
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 50px;
+    /*display:table-cell;*/
+    font-size: 150%;
+    vertical-align:middle;
+}
+
+.addTaskBtn:hover {
+  background-color: #bbb;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the list items */
+ul li {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  list-style-type: none;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+  
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Set all odd list items to a different color (zebra-stripes) */
+ul li:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+/* Darker background-color on hover */
+ul li:hover {
+  background: #ddd;
+}
+
+/* When clicked on, add a background color and strike out text */
+ul li.checked {
+  background: #888;
+  color: #fff;
+  text-decoration: line-through;
+}
+
+/* Add a "checked" mark when clicked on */
+ul li.checked::before {
+  content: '';
+  position: absolute;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
+}
+
+.collapsible-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  font: Helvetica;
+}
+
+.check_info {
+    float: right;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 15px;
+    vertical-align: middle;
+    opacity: 0.5;
+}
+
+.check_info:hover {
+    opacity: 0.8;
+}
+
+.box_container {
+ /* position: relative;
+  width: 100%;
+  height: 300px;
+  margin: 200px auto;*/
+  display:         flex;
+  flex-wrap:       wrap;
+  justify-content: center;
+  margin-top: 60px;
+
+}
+
+.box_container .task_box {
+  position: relative;
+  width: calc(400px - 30px);
+  height: calc(300px - 30px);
+  background: #4CAF50;
+  float: left;
+  margin: 15px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.box_container .task_box .task_icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height:100%;
+  background: #319635;
+  transition: 0.5s;
+  z-index: 1;
+}
+
+.box_container .task_box .task_content {
+  position: absolute;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  top:100%;
+  transition: 0.5s;
+  z-index: 1;
+  opacity: 0;
+  color: #000;
+}
+
+.box_container .task_box:hover {
+  cursor: pointer;
+}
+
+
+.box_container .task_box:hover .task_icon {
+  top: 20px;
+  left: calc(50% - 40px);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.box_container .task_box:hover .task_content {
+  top: 40%;
+  opacity: 1;
+}
+
+
+.box_container .task_box .task_icon .fa {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 80px;
+  transition: 0.5s;
+  color: #fff;
+}
+
+.box_container .task_box:hover .task_icon .fa {
+  font-size: 40px;
+}
+
+.graphs_box_container {
+ /* position: relative;
+  width: 100%;
+  height: 300px;
+  margin: 200px auto;*/
+  display:         flex;
+  flex-wrap:       wrap;
+  justify-content: center;
+  /*background-color: #90EE90;*/
+  /*margin-top: 200px;*/
+
+}
+
+.graphs_box_container .graphs_task_box {
+  position: relative;
+  width: calc(500px);
+  height: calc(400px);
+  background: #fff;
+  float: left;
+  margin: 15px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 10px;
+  text-align: center;
+  /*background-color: #4CAF50;*/
+  border-color: #4CAF50;
+  /*border-width: 10px;*/
+  border-style: solid;
+}
+
+[class$="-legend"] {
+  list-style: none;
+  cursor: pointer;
+  padding-left: 0;
+}
+
+[class$="-legend"] li {
+  display: inline-block;
+  padding: 0 5px;
+}
+
+[class$="-legend"] li.hidden {
+  text-decoration: line-through;
+}
+
+[class$="-legend"] li span {
+  border-radius: 5px;
+  display: inline-block;
+  height: 10px;
+  margin-right: 10px;
+  width: 10px;
+}

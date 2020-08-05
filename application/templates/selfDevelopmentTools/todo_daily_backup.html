@@ -1,0 +1,209 @@
+    {% extends "layout.html" %}
+    
+    {% block content %}
+        <div>
+            <h1 class="text-center">Your Daily To Do Tasks</h1>
+        </div>
+        <div class="addtask">
+            <h2 style="margin:5px">Add to the list</h2>
+            <input type="text" id="myInput" placeholder="Task Title...">
+            <!-- <span onclick="newElement()" class="addTaskBtn text-center">Add</span> -->
+            
+            <input onclick="newElement()" type="submit" value="Submit" class="addTaskBtn">     
+        </div>
+        
+        <ul id="myUL">
+            <li class="collapsible">Hit the gym</li>
+            <div class="collapsible-content">
+                <p id="demo">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+            </div>
+            <li class="checked collapsible">Pay bills</li>
+            <div>
+                
+            </div>
+            <li class="collapsible">Meet George</li>
+            <li class="collapsible">Buy eggs</li>
+            <li class="collapsible">Read a book</li>
+            <li class="collapsible">Organize office</li>
+        </ul>
+
+        <script>
+
+            // Create a "close" button and append it to each list item
+            var myNodelist = document.getElementsByTagName("LI");
+            var i;
+            for (i = 0; i < myNodelist.length; i++) {
+              var span = document.createElement("SPAN");
+              var txt = document.createTextNode("\u00D7");
+              span.className = "close";
+              span.appendChild(txt);
+              myNodelist[i].appendChild(span);
+            }
+
+            // Create a "close" button and append it to each list item
+            var myNodelist = document.getElementsByTagName("LI");
+            var i;
+            for (i = 0; i < myNodelist.length; i++) {
+              var span = document.createElement("SPAN");
+              var txt = document.createTextNode("Check Task Info");
+              span.className = "check_info";
+              span.appendChild(txt);
+              myNodelist[i].appendChild(span);
+            }
+
+            // Click on a close button to hide the current list item
+            var close = document.getElementsByClassName("close");
+            var i;
+            for (i = 0; i < close.length; i++) {
+              close[i].onclick = function() {
+                var div = this.parentElement;
+                console.log("I am in close")
+                console.log(div)
+                var description = div.nextElementSibling;
+                console.log(description)
+                description.style.display = "none"
+                div.style.display = "none";
+              }
+            }
+
+            // Click on a check info button to show/hide the info og task item
+            // var coll = document.getElementsByClassName("check_info");
+            // var i;
+            // for (i = 0; i < coll.length; i++) {
+            //   coll[i].addEventListener("click", function() {
+            //     this.parentElement.classList.toggle("active");
+            //     var content = this.parentElement.nextElementSibling;
+            //     console.log("I am in check_info")
+            //     console.log(content)
+            //     if (content.style.display === "block") {
+            //       content.style.display = "none";
+            //     } else {
+            //       content.style.display = "block";
+            //     }
+            //     console.log(content)
+            //   });
+            // }
+
+            // var coll = document.getElementsByClassName("check_info");
+            // var i;
+            // for (i = 0; i < coll.length; i++) {
+            //   coll[i].addEventListener("click", function() {
+            //     var xhttp = new XMLHttpRequest();
+            //     xhttp.onreadystatechange = function() {
+            //         if (this.readyState == 4 && this.status == 200) {
+            //             console.log("I am in ajax")
+            //             console.log(this.responseText)
+            //             var obj = JSON.parse(this.responseText);
+            //             console.log(obj)
+            //             document.getElementById("demo").innerHTML = obj.a;
+            //         }
+            //     };
+            //     xhttp.open("GET", "{{ url_for('dailytodo_personal')}}", true);
+            //     xhttp.send();
+            //     this.parentElement.classList.toggle("active");
+            //     var content = this.parentElement.nextElementSibling;
+            //     console.log("I am in check_info")
+            //     console.log(content)
+            //     if (content.style.display === "block") {
+            //       content.style.display = "none";
+            //     } else {
+            //       content.style.display = "block";
+            //     }
+            //     console.log(content)
+            //   });
+            // }
+
+            var coll = document.getElementsByClassName("check_info");
+            var i;
+            for (i = 0; i < coll.length; i++) {
+              coll[i].addEventListener("click", function() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("I am in ajax")
+                        console.log(this.responseText)
+                        var obj = JSON.parse(this.responseText);
+                        console.log(obj)
+                        console.log(this)
+                        document.getElementById("demo").innerHTML = obj.a;
+                    }
+                };
+                xhttp.open("GET", "{{ url_for('dailytodo_personal')}}", true);
+                xhttp.send();
+                this.parentElement.classList.toggle("active");
+                var content = this.parentElement.nextElementSibling;
+                console.log("I am in check_info")
+                console.log(content)
+                if (content.style.display === "block") {
+                  content.style.display = "none";
+                } else {
+                  content.style.display = "block";
+                }
+                console.log("this")
+                console.log(this)
+              });
+            }
+
+            // Add a "checked" symbol when clicking on a list item
+            var list = document.querySelector('ul');
+            list.addEventListener('click', function(ev) {
+                if (ev.target.tagName === 'LI') {
+                    ev.target.classList.toggle('checked');
+                }
+            }, false);
+
+            // Create a new list item when clicking on the "Add" button
+            function newElement() {
+              var li = document.createElement("li");
+              var inputValue = document.getElementById("myInput").value;
+              var t = document.createTextNode(inputValue);
+              li.appendChild(t);
+              if (inputValue === '') {
+                alert("You must add something for the task title!");
+              } else {
+                document.getElementById("myUL").appendChild(li);
+              }
+              document.getElementById("myInput").value = "";
+
+              var span = document.createElement("SPAN");
+              var txt = document.createTextNode("\u00D7");
+              span.className = "close";
+              span.appendChild(txt);
+              li.appendChild(span);
+
+              var span = document.createElement("SPAN");
+              var txt = document.createTextNode("Check Task Info");
+              span.className = "check_info";
+              span.appendChild(txt);
+              li.appendChild(span);
+
+              for (i = 0; i < close.length; i++) {
+                close[i].onclick = function() {
+                  var div = this.parentElement;
+                  div.style.display = "none";
+                }
+              }
+            }
+
+            // var coll = document.getElementsByClassName("collapsible");
+            // var i;
+
+            // for (i = 0; i < coll.length; i++) {
+            //   coll[i].addEventListener("click", function() {
+            //     this.classList.toggle("active");
+            //     var content = this.nextElementSibling;
+            //     console.log("I am good")
+            //     if (content.style.display === "block") {
+            //       content.style.display = "none";
+            //     } else {
+            //       content.style.display = "block";
+            //     }
+            //   });
+            // }
+
+        </script>
+            
+
+    {% endblock %}

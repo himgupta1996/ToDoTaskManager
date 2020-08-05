@@ -1,0 +1,157 @@
+    {% extends "layout.html" %}
+    
+    {% block content %}
+        <div>
+            <h1 class="text-center">To Do Tasks</h1>
+
+            <div>
+                <table class="table table-hover w3-striped" id="taskTable">
+                <!-- <table class="table-hover w3-striped" style="table-layout: auto; width: 100%;" id="taskTable"> -->
+                    <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date Added</th>
+                        <th scope="col">Task Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Days To Complete/Days since added</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <td scope='row'><input id="inputTitle" class="w3-input" placeholder="Title..."></td>
+                        <td><input id="inputDescription" class="w3-input" placeholder="Description..."></td>
+                        <td><input id="inputDate" class="w3-input" placeholder="Date Added..."></td>
+                        <!-- <td>
+                            <select id="taskType" name="taskType" class="w3-input">
+                                <option value="All"><p>All</p></option>
+                                <option value="Daily"><p>Daily</p></option>
+                                <option value="Montly"><p>Monthly</p></option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Yearly">Yearly</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="taskStatus" name="taskStatus" class="w3-input">
+                                <option onclick="newElement1()" value="All">All</option>
+                                <option onclick="newElement1()" value="In Progress">In Progress</option>
+                                <option value="Yet To Start">Yet To Start</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Failed">Failed</option>
+                            </select>
+                        </td> -->
+                        <td><input id="inputType" class="w3-input" placeholder="Task Type..."></td>
+                        <td><input id="inputStatus" class="w3-input" placeholder="Task Status..."></td>
+                        <td><input id="inputDuration" class="w3-input" placeholder="Days Taken To Complete..."></td>
+                    </tr>
+
+                    <tbody>
+
+                    <!-- Construct the rest of courses here -->
+                    {% for task in total_tasks %}
+                    <tr class = "tasks">
+                        <td scope='row'>{{ task.e2["title"] }}</td>
+                        <td>{{ task.e2["description"] }}</td>
+                        <td>{{ task.e2["date_added"] }}</td>
+                        <td>{{ task.e2["task_type"] }}</td>
+                        <td>{{ task.e2["status"] }}</td>
+                        <td>{{ task.e2["days_taken"] }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+            function filterTableDropDown(event, index) {
+                console.log("In main 3")
+                console.log(event)
+                console.log(index)
+            }
+
+            // function filterTable(event, index) {
+            //     console.log("I am here")
+            //     console.log(event)
+            //     console.log("I am here2")
+            //     console.log(document.getElementById("inputName1").value)
+            //   var filter = event.target.value.toUpperCase();
+            //   console.log(filter)
+            //   var rows = document.querySelectorAll(".tasks");
+            //   console.log(rows)
+            //   for (var i = 0; i < rows.length; i++) {
+            //     var firstCol = rows[i].cells[0].textContent.toUpperCase();
+            //     var secondCol = rows[i].cells[1].textContent.toUpperCase();
+            //     var thirdCol = rows[i].cells[2].textContent.toUpperCase();
+            //     var fourthCol = rows[i].cells[3].textContent.toUpperCase();
+            //     var fifthCol = rows[i].cells[4].textContent.toUpperCase();
+            //     var sixthCol = rows[i].cells[5].textContent.toUpperCase();
+            //     if ((firstCol.indexOf(filter) > -1 && index == 0) || (secondCol.indexOf(filter) > -1 && index == 1) || (thirdCol.indexOf(filter) > -1 && index == 2) || (fourthCol.indexOf(filter) > -1 && index == 3) || (fifthCol.indexOf(filter) > -1 && index == 4) || (sixthCol.indexOf(filter) > -1 && index == 5)) {
+            //       rows[i].style.display = "";
+            //     } else {
+            //       rows[i].style.display = "none";
+            //     }      
+            //   }
+            // }
+
+            function filterTable(event, index) {
+                console.log("I am here")
+                console.log(event)
+                console.log("I am here2")
+
+                var filter1 = document.getElementById("inputTitle").value.toUpperCase()
+                var filter2 = document.getElementById("inputDescription").value.toUpperCase()
+                var filter3 = document.getElementById("inputDate").value.toUpperCase()
+                var filter4 = document.getElementById("inputType").value.toUpperCase()
+                var filter5 = document.getElementById("inputStatus").value.toUpperCase()
+                var filter6 = document.getElementById("inputDuration").value.toUpperCase()
+
+              var rows = document.querySelectorAll(".tasks");
+              console.log(rows)
+              for (var i = 0; i < rows.length; i++) {
+                var firstCol = rows[i].cells[0].textContent.toUpperCase();
+                var secondCol = rows[i].cells[1].textContent.toUpperCase();
+                var thirdCol = rows[i].cells[2].textContent.toUpperCase();
+                var fourthCol = rows[i].cells[3].textContent.toUpperCase();
+                var fifthCol = rows[i].cells[4].textContent.toUpperCase();
+                var sixthCol = rows[i].cells[5].textContent.toUpperCase();
+                if ((firstCol.indexOf(filter1) > -1) && (secondCol.indexOf(filter2) > -1) && (thirdCol.indexOf(filter3) > -1) && (fourthCol.indexOf(filter4) > -1) && (fifthCol.indexOf(filter5) > -1) && (sixthCol.indexOf(filter6) > -1)) {
+                  rows[i].style.display = "";
+                } else {
+                  rows[i].style.display = "none";
+                }      
+              }
+            }
+
+            document.querySelectorAll('input.w3-input').forEach(function(el,idx){
+                console.log("In Main")
+                console.log(el)
+                console.log(idx)
+              el.addEventListener('keyup', function(e){
+                filterTable(e, idx);
+              }, false);
+            });
+
+            // document.querySelectorAll('select.w3-input').forEach(function(el,idx){
+            //     console.log("In Main 2")
+            //     console.log(el.children)
+            //     console.log(idx)
+
+            //     var children = el.children
+
+            //     console.log(children.length)
+
+            //     for (var i = 0; i < children.length; i++) {
+            //         var tableChild = children[i];
+            //         console.log("In main 5")
+            //         console.log(tableChild)
+            //         tableChild.addEventListener('click', function(e1){
+            //                 console.log("In main 6")
+            //                 filterTableDropDown(e1, idx)
+            //             },false);
+            //     }
+            // });
+        </script>
+
+    {% endblock %}

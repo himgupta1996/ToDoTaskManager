@@ -1,0 +1,53 @@
+    {% extends "layout.html" %}
+    
+    {% block content %}
+    <div class="text-center">
+        <br>
+        <br>
+        <h2>Choose your Option to Proceed</h2>
+        <br>
+      </div>
+
+      <div class="box_container">
+        <a href="{{ url_for('todo')}}">
+          <div class="task_box">
+            <div class="task_icon">
+              <i class="fa fa-pencil-square" aria-hidden="true"></i>
+            </div>
+            <div class="task_content">
+              <b><h3>Manage Tasks</h3></b>
+              <p>Click here to add, delete, or edit your tasks.</p>
+            </div>
+          </div>
+        </a>
+        <a href="{{ url_for('todo_progress')}}">
+          <div class="task_box">
+            <div class="task_icon">
+              <i class="fa fa-bar-chart" aria-hidden="true"></i>
+            </div>
+            <div class="task_content">
+              <b><h3>Track Task Progress</h3></b>
+              <p>Click here to track your progress and analyse your Completed,In Progress and Failed Tasks.</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+        <script>
+          function manage_todo() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                console.log("Get successfull.")
+              }
+            };
+            xhttp.open("GET", "{{ url_for('todo')}}", true);
+            xhttp.send();
+          }
+
+            
+
+        </script>
+            
+
+    {% endblock %}

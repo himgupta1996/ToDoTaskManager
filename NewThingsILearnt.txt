@@ -1,0 +1,5 @@
+1. Creating Virtual Envirnment and activating it.
+https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#specifying-a-location-for-an-environment
+
+2. pip freeze > requirements.txt
+It makes a requirement file which you can use to install packages later in other venvirnment by using the command: pip install -r requiremnets.txt

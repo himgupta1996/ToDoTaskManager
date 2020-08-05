@@ -1,0 +1,245 @@
+    {% extends "layout.html" %}
+    
+    {% block content %}
+        <div>
+            <h1 class="text-center">Your To Do Tasks</h1>
+            <h6 class="text-center">Date: {{ date }}</h6>
+        </div>
+        <div class="addtask">
+            <h2 style="margin:5px">Add to the list</h2>
+            <input type="text" id="myInput" placeholder="Task Title...">
+            <input type="text" id="myDescription" placeholder="Add description if required...">
+            <!-- <span onclick="newElement()" class="addTaskBtn text-center">Add</span> -->
+            
+            <input onclick="newElement()" type="submit" value="Submit" class="addTaskBtn">     
+        </div>
+        
+        <ul id="myUL">
+            {% for task in tasks %}
+                <li class = "collapsible {% if task.e2['status']=='Completed' %}checked{% endif %}">{{ task.e2["title"] }}</li>
+                <div class = "collapsible-content">
+                    <p>Date Added: {{ task.e2["date_added"] }}</p>
+                    <p>Description: {{ task.e2["description"] }}</p>
+                    <p>Status: {{ task.e2["status"] }}
+                </div>
+                <div id="task_id" style="display: none;">{{ task.e2["task_id"] }}</div>
+            {% endfor %}
+        </ul>
+
+        <script>
+
+            // Create a "close" button and append it to each list item
+            var myNodelist = document.getElementsByTagName("LI");
+            var i;
+            for (i = 0; i < myNodelist.length; i++) {
+              var span = document.createElement("SPAN");
+              var txt = document.createTextNode("\u00D7");
+              span.className = "close";
+              span.appendChild(txt);
+              myNodelist[i].appendChild(span);
+            }
+
+            // Create a "check info" dropdown and append it to each list item
+            var myNodelist = document.getElementsByTagName("LI");
+            var i;
+            for (i = 0; i < myNodelist.length; i++) {
+              var span = document.createElement("SPAN");
+              var txt = document.createTextNode("Check Task Info");
+              span.className = "check_info";
+              span.appendChild(txt);
+              myNodelist[i].appendChild(span);
+            }
+
+            // var coll = document.getElementsByClassName("check_info");
+            // var i;
+            // for (i = 0; i < coll.length; i++) {
+            //   coll[i].addEventListener("click", function() {
+            //     var xhttp = new XMLHttpRequest();
+            //     xhttp.onreadystatechange = function() {
+            //         if (this.readyState == 4 && this.status == 200) {
+            //             console.log("I am in ajax")
+            //             console.log(this.responseText)
+            //             var obj = JSON.parse(this.responseText);
+            //             console.log(obj)
+            //             document.getElementById("demo").innerHTML = obj.a;
+            //         }
+            //     };
+            //     xhttp.open("GET", "{{ url_for('dailytodo')}}", true);
+            //     xhttp.send();
+            //     this.parentElement.classList.toggle("active");
+            //     var content = this.parentElement.nextElementSibling;
+            //     console.log("I am in check_info")
+            //     console.log(content)
+            //     if (content.style.display === "block") {
+            //       content.style.display = "none";
+            //     } else {
+            //       content.style.display = "block";
+            //     }
+            //     console.log(content)
+            //   });
+            // }
+
+            var coll = document.getElementsByClassName("close");
+            var i;
+            for (i = 0; i < coll.length; i++) {
+              coll[i].addEventListener("click", close);
+            }
+
+            function close() {
+              if (confirm("Do you want to delete it permanently. You will not be able to track it.")) {
+                var div = this.parentElement;
+                console.log("I am in close")
+                console.log(div)
+                var description = div.nextElementSibling;
+                console.log(description)
+                var task_id = this.parentElement.nextElementSibling.nextElementSibling.innerHTML
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("I am in close")
+                        console.log(this.responseText)
+                        description.style.display = "none"
+                        div.style.display = "none";
+                    }
+                    else if(this.readyState == 4 && this.status == 500){
+                      alert(this.responseText)
+                    }
+                };
+                xhttp.open("DELETE", "{{ url_for('dailytodo')}}/"+task_id, true);
+                xhttp.send();
+              }
+              else {
+                console.log("The DELETE process halted.")
+              }
+            }
+
+
+
+            var coll = document.getElementsByClassName("check_info");
+            var i;
+            for (i = 0; i < coll.length; i++) {
+              coll[i].addEventListener("click", click_check_info);
+            }
+
+            function click_check_info() {
+              console.log(this)
+              var content = this.parentElement.nextElementSibling;
+                var task_id = this.parentElement.nextElementSibling.nextElementSibling.innerHTML
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("I am in ajax")
+                        console.log(this.responseText)
+                        var obj = JSON.parse(this.responseText);
+                        console.log(obj)
+                        console.log(this)
+                        content.innerHTML = "<p>Date Added: "+obj.date_added+"</p><p>Date Started: "+obj.date_started+"</p><p>Description: "+obj.description+"</p><p>Status: "+obj.status+"</p>";
+                    }
+                };
+                xhttp.open("GET", "{{ url_for('dailytodo')}}/"+task_id, true);
+                xhttp.send();
+                this.parentElement.classList.toggle("active");
+                console.log("I am in check_info")
+                console.log(content)
+                if (content.style.display === "block") {
+                  content.style.display = "none";
+                } else {
+                  content.style.display = "block";
+                }
+                console.log("this")
+                console.log(this)
+            }
+
+            // Add a "checked" symbol when clicking on a list item
+            var list = document.querySelector('ul');
+            list.addEventListener('click', function(ev) {
+                if (ev.target.tagName === 'LI') {
+                  var task_id = ev.target.nextElementSibling.nextElementSibling.innerHTML
+                  console.log("the task id is")
+                  console.log(task_id)
+                  ev.target.classList.toggle('checked');                   
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      console.log(this.responseText)
+                    }
+                  };
+                  xhttp.open("PUT", "{{ url_for('dailytodo')}}/"+task_id, true);
+                  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                  if (ev.target.classList.contains('checked')) {
+                    xhttp.send("status=Completed");
+                  }
+                  else {
+                    xhttp.send("status=In Progress")
+                  }
+                }
+            }, false);
+
+            // Create a new list item when clicking on the "Add" button
+            function newElement() {
+              var xhttp = new XMLHttpRequest();
+              var inputValue = document.getElementById("myInput").value;
+              var descriptionValue = document.getElementById("myDescription").value;
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  var li = document.createElement("li");
+                  var task_info_div = document.createElement('div');
+                  var task_id_div = document.createElement('div');
+                  console.log(typeof inputValue)
+                  var t = document.createTextNode(inputValue);
+                  li.appendChild(t);
+                  if (inputValue === '') {
+                    alert("You must add something for the task title!");
+                  } else {
+                    document.getElementById("myUL").appendChild(li);
+                    document.getElementById("myUL").appendChild(task_info_div);
+                    document.getElementById("myUL").appendChild(task_id_div);
+                  }
+                  document.getElementById("myInput").value = "";
+                  document.getElementById("myDescription").value = "";
+
+                  var span = document.createElement("SPAN");
+                  var txt = document.createTextNode("\u00D7");
+                  span.className = "close";
+                  span.addEventListener("click", close)
+                  span.appendChild(txt);
+                  li.appendChild(span);
+
+                  var span = document.createElement("SPAN");
+                  var txt = document.createTextNode("Check Task Info");
+                  span.className = "check_info";
+                  span.addEventListener("click", click_check_info)
+                  // span.setAttribute("onclick", "click_check_info()")
+
+                  span.appendChild(txt);
+                  li.appendChild(span);
+
+                  for (i = 0; i < close.length; i++) {
+                    close[i].onclick = function() {
+                      var div = this.parentElement;
+                      div.style.display = "none";
+                    }
+                  }
+                  console.log(typeof this.responseText)
+                  task_id_div.innerHTML = this.responseText
+                  task_id_div.setAttribute("id", "task_id");
+                  task_id_div.setAttribute("style", "display: none;")
+                  task_info_div.innerHTML = "<p>Date Added: {{ date }}</p><p>Description: "+descriptionValue+"</p><p>Status: In Progress</p>";
+                  task_info_div.setAttribute("class", "collapsible-content")
+                }
+                else if(this.readyState == 4 && this.status == 500){
+                  document.getElementById("myInput").value = "";
+                  document.getElementById("myDescription").value = "";
+                  alert(this.responseText)
+                }
+              };
+              xhttp.open("POST", "{{ url_for('dailytodo')}}", true);
+              xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+              xhttp.send("status=In Progress&title="+inputValue+"&date={{ date }}&description="+descriptionValue);
+
+            }
+
+        </script>
+            
+
+    {% endblock %}

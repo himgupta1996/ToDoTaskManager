@@ -1,0 +1,50 @@
+C:\Users\Himanshu>python
+Python 3.6.3 |Anaconda, Inc.| (default, Oct 15 2017, 03:27:45) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import datetime
+>>> int(datetime.datetime.utcnow().timestamp())
+1586350824
+>>> datetime.datetime.utcnow()
+datetime.datetime(2020, 4, 8, 18, 30, 41, 963314)
+>>> import time
+>>> int(round(time.time() * 1000))
+1586370858457
+>>> int(datetime.datetime.utcnow().timestamp())
+1586351066
+>>> int(datetime.datetime.utcnow().timestamp())
+1586351134
+>>> date_N_days_ago = datetime.now() - timedelta(days=N)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: module 'datetime' has no attribute 'now'
+>>> date_N_days_ago = datetime.datetime()-timedelta(days=10)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: Required argument 'year' (pos 1) not found
+>>> date_N_days_ago = timedelta(days=10)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'timedelta' is not defined
+>>> date_N_days_ago = datetime.timedelta(days=10)
+>>> date_N_days_ago
+datetime.timedelta(10)
+>>> from datetime import datetime, timedelta
+>>> date_N_days_ago = datetime.now() - timedelta(days=N)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'N' is not defined
+>>> date_N_days_ago = datetime.now() - timedelta(days=10)
+>>> print(datetime.now())
+2020-04-09 11:00:32.996646
+>>> print(date_N_days_ago)
+2020-03-30 11:00:22.478015
+>>> datetime_str = '09/19/18'
+>>> datetime_object = datetime.strptime(datetime_str, '%m/%d/%y')
+>>> datetime_object
+datetime.datetime(2018, 9, 19, 0, 0)
+>>> date_N_days_ago =  datetime_object -  timedelta(days=10)
+>>> date_N_days_ago
+datetime.datetime(2018, 9, 9, 0, 0)
+>>> date_N_days_ago.strftime('%Y-%m-%d')
+'2018-09-09'
+>>>

@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+   
+    {% block content %}
+    <div>
+        <h1 class="text-center">{{ title }}</h1>
+
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3">
+                <h4 class="text-center">Daily To Do Tasks</h4>
+
+                <form action="{{ url_for('dailytodo') }}">
+                    <label for="DailyTodo">Enter the date for which you want to see/add your to do tasks:</label>
+                    <input type="date" id="DailyTodo" name="date" value={{ placeholder[0] }}>
+                    <!-- <input type="submit"> -->
+                    <p style="text-align:center">
+                        <input type="submit" value="Submit" class="btn-submit">
+                    </p>
+
+                </form>
+                <h3></h3>
+                <h3></h3>
+                <h3></h3>
+
+            </div>
+        </div>  
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3">
+                <h4 class="text-center">Monthly To Do Tasks</h4>
+                <form action="">
+                    <label for="MonthlyTodo">Enter the month for which you want to see/add your to do tasks:</label>
+                    <input type="month" id="MonthlyTodo" name="MonthlyTodo" value={{ placeholder[1] }}>
+                    <p style="text-align:center">
+                        <input type="submit" value="Submit" class="btn-submit">
+                    </p>
+
+                </form>
+                <h3></h3>
+                <h3></h3>
+                <h3></h3>
+
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3">
+                <h4 class="text-center">Yearly To Do Tasks</h4>
+                <form action="">
+                    <label for="YearlyTodo">Enter the year for which you want to see/add your to do tasks:</label>
+                    <input type="year" id="YearlyTodo" name="YearlyTodo" value={{ placeholder[2] }}>
+                    <p style="text-align:center">
+                        <input type="submit" value="Submit" class="btn-submit">
+                    </p>
+
+                </form>
+                <h3></h3>
+                <h3></h3>
+                <h3></h3>
+
+            </div>
+        </div>    
+    </div>
+ {% endblock %}

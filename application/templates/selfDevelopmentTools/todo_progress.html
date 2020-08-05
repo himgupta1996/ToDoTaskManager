@@ -1,0 +1,335 @@
+    {% extends "layout.html" %}
+    
+    {% block content %}
+      <div class="text-center">
+        <br>
+        <a href="{{ url_for('todo_all')}}" style="font-size: 28.8px; color: #4CAF50;">Check All of your Tasks here.</a>
+        <br>
+      </div>
+      <div class="graphs_box_container">
+          
+          <div class="graphs_task_box">
+            <br>
+            <h4 class="text-center">Distribution of your Tasks by Task Status.</h4>
+            <!-- <canvas class="text-center" id="chart" style="height: 80%;width: 80%"></canvas> -->
+            <!-- <div style="height: 80%;"> -->
+            <br>
+            <br>
+            <div>
+              <canvas id="barchart"></canvas>
+            </div>
+
+          </div>
+          <div class="graphs_task_box">
+            <br>
+            <h4 class="text-center"> Percentage distribution of your Tasks by Task Status.</h4>
+            <!-- <div class="chart-container" style="position: relative; height:100px; width:100px; text-align: center;"> -->
+            <br>
+            <div>
+              <div id="legend"></div>
+              <canvas id="piechart"></canvas>
+            </div>
+          </div>
+          <div class="graphs_task_box">
+            <br>
+            <h4 class="text-center">Distribution of your Completed Tasks by number of days it took to complete.</h4>
+            <!-- <div class="chart-container" style="position: relative; height:100px; width:100px; text-align: center;"> -->
+            <br>
+            <div>
+              <canvas id="completedtasksbarchart"></canvas>
+            </div>
+          </div>
+          <div class="graphs_task_box">
+            <br>
+            <h4 class="text-center">Distribution of your Inprogress Tasks by number of days since it was started.</h4>
+            <!-- <a href="{{ url_for('todo')}}" style="font-size: 28.8px; color: #4CAF50;">Check your Inprogress Tasks</a> -->
+            <!-- <div class="chart-container" style="position: relative; height:100px; width:100px; text-align: center;"> -->
+            <br>
+            <div>
+              <canvas id="inprogresstasksbarchart"></canvas>
+            </div>
+          </div>
+            
+            <!-- <canvas class="text-center" style="height: 300px;width: 300px" id="piechart" ></canvas> -->
+          <!-- </div> -->
+          <!-- <div class="graphs_task_box">
+            <h4 class="text-center">Check your percentage of Tasks</h4>
+            <div id="legend"></div>
+            <canvas class="text-center" id="linechart" style="height: 80%;width: 80%"></canvas>
+          </div> -->
+
+      </div>
+
+      <!-- <div style="text-align: center;">
+        <h3 class="text-center">Check your number of Tasks</h3>
+        <canvas id="chart" width="600" height="400"></canvas>
+      </div>
+
+      <div style="text-align: center;">
+        <h3 class="text-center">Check your percentage of Tasks</h3>
+        <canvas id="piechart" width="600" height="400"></canvas>
+      </div> -->
+
+      <script>
+
+        //////////////////////// ALL TASKS BAR CHART ///////////////////////////
+      // bar chart data
+      // var barData = {
+      //   type: 'bar',
+      //   labels : [
+      //     {% for item in labels %}
+      //      "{{ item }}",
+      //     {% endfor %}
+      //   ],
+
+      //   datasets : [{
+      //     fillColor: "rgba(151,187,205,0.2)",
+      //     strokeColor: "rgba(151,187,205,1)",
+      //     pointColor: "rgba(151,187,205,1)",
+      //     data : [
+      //       {% for item in values %}
+      //         "{{ item }}",
+      //       {% endfor %}
+      //     ]
+      //   }]
+      // }
+
+     // get bar chart canvas
+      var mychart = document.getElementById("barchart").getContext("2d");
+
+      steps = 10
+
+      max = {{max}}
+
+      // var chart = new Chart(mychart, barData);
+      var options = {
+        scales: {
+          yAxes: [ {
+            display: true,
+            ticks: {
+              suggestedMin: 0    // minimum will be 0, unless there is a lower value
+            }
+          }]
+        }
+      };
+
+      var myBarChart = new Chart(mychart, {
+        type: 'bar',
+        data: {
+          labels: [
+              {% for label in labels %}
+                "{{ label }}",
+              {% endfor %}
+            ],
+          datasets: [{
+            label: 'Number of Tasks',
+            data: [
+                {% for value in values %}
+                  "{{ value }}",
+                {% endfor %}
+              ],
+            backgroundColor: "rgba(151,187,205,0.5)"
+          }]
+        },
+        options: options
+      });
+
+      ////////////////// PIE CHART ///////////////////////////////
+
+        var ctx = document.getElementById("piechart").getContext('2d');
+        var chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: [
+              {% for label in labels %}
+                "{{ label }}",
+              {% endfor %}
+            ],
+            datasets: [{
+              backgroundColor: [
+                {% for color in colors %}
+                  "{{ color }}",
+                {% endfor %}
+              ],
+              data: [
+                {% for value in total_task_pie_values %}
+                  "{{ value }}",
+                {% endfor %}
+              ]
+            }]
+          },
+          options: {
+            legend: {
+              display: false
+            },
+          }
+        });
+
+        var myLegendContainer = document.getElementById("legend");
+        // generate HTML legend
+        myLegendContainer.innerHTML = chart.generateLegend();
+        // bind onClick event to all LI-tags of the legend
+        var legendItems = myLegendContainer.getElementsByTagName('li');
+        for (var i = 0; i < legendItems.length; i += 1) {
+          legendItems[i].addEventListener("click", legendClickCallback, false);
+        }
+
+        function legendClickCallback(event) {
+          event = event || window.event;
+
+          var target = event.target || event.srcElement;
+          while (target.nodeName !== 'LI') {
+            target = target.parentElement;
+          }
+          var parent = target.parentElement;
+          var chartId = parseInt(parent.classList[0].split("-")[0], 10);
+          var chart = Chart.instances[chartId];
+          var index = Array.prototype.slice.call(parent.children).indexOf(target);
+          var meta = chart.getDatasetMeta(0);
+          console.log(index);
+          var item = meta.data[index];
+
+          if (item.hidden === null || item.hidden === false) {
+            item.hidden = true;
+            target.classList.add('hidden');
+          } else {
+            target.classList.remove('hidden');
+            item.hidden = null;
+          }
+          chart.update();
+        }
+
+        //////////////////////////////////// COMPLETED TASKS BAR CHART //////////////////////////////
+
+        var myctbarchart = document.getElementById("completedtasksbarchart").getContext("2d");
+
+        steps = 10
+
+        max = {{max}}
+
+        // var chart = new Chart(mychart, barData);
+        var options = {
+          scales: {
+            yAxes: [{
+              display: true,
+              ticks: {
+                suggestedMin: 0,
+                stepSize: 1    // minimum will be 0, unless there is a lower value
+              }
+            }]
+          }
+        };
+
+        var myctchart = new Chart(myctbarchart, {
+          type: 'bar',
+          data: {
+            labels: [
+                {% for label in completed_task_labels %}
+                  "{{ label }}",
+                {% endfor %}
+              ],
+            datasets: [{
+              label: 'Task Count',
+              data: [
+                  {% for value in completed_task_values %}
+                    "{{ value }}",
+                  {% endfor %}
+                ],
+              backgroundColor: "rgba(50,200,50,0.5)"
+            }]
+          },
+          options: options
+        });
+
+        //////////////////////////////////// INPROGRESS TASKS BAR CHART //////////////////////////////
+
+        var myipbarchart = document.getElementById("inprogresstasksbarchart").getContext("2d");
+
+        steps = 10
+
+        max = {{max}}
+
+        // var chart = new Chart(mychart, barData);
+        var options = {
+          scales: {
+            yAxes: [{
+              display: true,
+              ticks: {
+                suggestedMin: 0,
+                stepSize: 1    // minimum will be 0, unless there is a lower value
+              }
+            }]
+          }
+        };
+
+        var myipchart = new Chart(myipbarchart, {
+          type: 'bar',
+          data: {
+            labels: [
+                {% for label in inprogress_task_labels %}
+                  "{{ label }}",
+                {% endfor %}
+              ],
+            datasets: [{
+              label: 'Task Count',
+              data: [
+                  {% for value in inprogress_task_values %}
+                    "{{ value }}",
+                  {% endfor %}
+                ],
+              backgroundColor: "rgba(255,215,0,0.5)"
+            }]
+          },
+          options: options
+        });
+
+        ////////////////////////////////////////// EXPERIMENTATION /////////////////////////////////////
+
+        var chart = new CanvasJS.Chart("chartContainer",
+  {
+        
+      data: [
+      {
+        animationEnabled: true,
+        type: "bar",
+        cursor:"pointer",
+        click: onClick,          
+        dataPoints: [
+        { label: "Google", y: 85, link:"http://google.com/" },
+        { label: "Bing", y: 15, link:"http://bing.com/"},
+        { label: "Yahoo Search", y: 13, link:"http://search.yahoo.com/" },
+        { label: "DuckDuckGo", y: 6, link:"http://www.duckduckgo.com/" },
+        { label: "DogPile", y: 3, link: "http://www.dogpile.com/" }        
+        ]
+      }
+      ]
+    });
+
+ chart.render();
+ function onClick(e){ 
+        window.open(e.dataPoint.link,'_blank');  
+};
+
+
+    </script>
+
+      <!-- <script>
+        function manage_todo() {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              console.log("Get successfull.")
+            }
+          };
+          xhttp.open("GET", "{{ url_for('todo')}}", true);
+          xhttp.send();
+        }
+
+          
+
+      </script> -->
+
+    
+            
+
+    {% endblock %}
