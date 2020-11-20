@@ -15,6 +15,12 @@ body {
     margin:0px;
 }
 
+.task_description_body {
+  font-family: emoji;
+  font-size: 17px;
+  text-align: center;
+}
+
 header {
     text-align: center;
 }

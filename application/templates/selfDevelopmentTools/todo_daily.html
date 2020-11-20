@@ -154,14 +154,21 @@
                 var task_id = this.parentElement.nextElementSibling.nextElementSibling.innerHTML
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log("I am in ajax")
-                        console.log(this.responseText)
-                        var obj = JSON.parse(this.responseText);
-                        console.log(obj)
-                        console.log(this)
-                        content.innerHTML = "<p>Date Added: "+obj.date_added+"</p><p>Date Started: "+obj.date_started+"</p><p>Description: "+obj.description+"</p><p>Status: "+obj.status+"</p>";
+                  if (this.readyState == 4 && this.status == 200) {
+                    console.log("I am in ajax")
+                    console.log(this.responseText)
+                    var obj = JSON.parse(this.responseText);
+                    console.log(obj)
+                    console.log(this)
+                    if (obj.status == "Yet To Start"){
+                      content.innerHTML = "<p><b>Date Added:</b> "+obj.date_added+"<p></p><b>Description:</b> "+obj.description+"<p></p><b>Status: </b>"+obj.status+"</p>";
+                      content.className = "task_description_body";
                     }
+                    else{
+                      content.innerHTML = "<p><b>Date Added:</b> "+obj.date_added+"</p><p><b>Date Started:</b> "+obj.date_started+"</p><p><b>Description:</b> "+obj.description+"</p><p><b>Status:</b> "+obj.status+"</p>";
+                      content.className = "task_description_body";
+                    }
+                  }
                 };
                 xhttp.open("GET", "{{ url_for('dailytodo')}}/"+task_id, true);
                 xhttp.send();
