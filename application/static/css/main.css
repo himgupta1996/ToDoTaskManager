@@ -9,9 +9,9 @@
 
 html,
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Serif;
     height: 100%;
-    position: relative;
+    /*position: relative;*/
     margin:0px;
 }
 
@@ -46,11 +46,11 @@ hr {
     border: 0 none;
 }
 
-input[type=text], input[type=password], input[type=date], input[type=month], input[type=year] {
+input[type=text], input[type=password], input[type=date], input[type=month], input[type=year], input[type=checkbox] {
     width: 100%;
     padding: 7px;
     margin: 5px 0 10px 0;
-    display: inline-block;
+    display: block;
     border: none;
     background: #f1f1f1;
     border: 1px solid #ccc;
@@ -58,9 +58,14 @@ input[type=text], input[type=password], input[type=date], input[type=month], inp
     box-sizing: border-box;
 }
 
-input[type=text]:focus, input[type=password]:focus {
+input[type=text]:focus, input[type=password]:focus input[type=date]:focus{
     background-color: #ddd;
     outline: none;
+}
+
+.main {
+  /*padding: 16px;*/
+  margin-top: 120px;
 }
 
 .top-container {
@@ -139,8 +144,12 @@ footer {
 /*Top Navigation*/
 
 .topnav {
+  top:0px;
   overflow: hidden;
   background-color: #333;
+  position: fixed;
+  width:100%;
+  z-index: 3;
 }
 
 .topnav a {
@@ -169,8 +178,13 @@ footer {
 /*Todo Top Navigation*/
 
 .todotopnav {
+  top: 52.8px;
   overflow: hidden;
-  background-color: rgb(76, 175, 80, 0.8);
+  /*background-color: rgb(76, 175, 80, 1);*/
+  background-color: #888;
+  position: fixed;
+  width: 100%;
+  z-index: 3;
 }
 
 .todotopnav a {
@@ -188,7 +202,7 @@ footer {
 }
 
 .todotopnav a.active {
-  background-color: rgb(76, 175, 80, 1);
+  background-color: rgb(76, 175, 80, 0.8);
   color: black;
 }
 
@@ -297,6 +311,10 @@ footer {
     padding: 5px 40px;
     color: white;
     text-align: center;
+    width: 50%;
+    margin: auto;
+    border-radius: 5px;
+    display: block;
 }
 
 .addtask:after {
@@ -325,7 +343,7 @@ footer {
     margin: 8px 0;
     border: none;
     /*cursor: pointer;*/
-    width: 40%;
+    width: 15%;
     /*opacity: 0.9;*/
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -340,6 +358,23 @@ footer {
   background-color: #bbb;
 }
 
+.filtertask {
+    background-color: #4CAF50;
+    padding: 5px 40px;
+    color: white;
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    border-radius: 5px;
+    display: block;
+}
+
+/*.filtertask:after {
+  content: "";
+  display: table;
+  clear: both;
+}*/
+
 ul {
   margin: 0;
   padding: 0;
@@ -348,7 +383,7 @@ ul {
 /* Style the list items */
 ul li {
   cursor: pointer;
-  position: relative;
+  /*position: relative;*/
   padding: 12px 8px 12px 40px;
   list-style-type: none;
   background: #eee;
@@ -374,8 +409,8 @@ ul li:hover {
 
 /* When clicked on, add a background color and strike out text */
 ul li.checked {
-  background: #888;
-  color: #fff;
+  /*background: #888;*/
+  /*color: #fff;*/
   text-decoration: line-through;
 }
 
@@ -399,19 +434,6 @@ ul li.checked::before {
   overflow: hidden;
   background-color: #f1f1f1;
   font: Helvetica;
-}
-
-.check_info {
-    float: right;
-    padding-right: 10px;
-    padding-left: 10px;
-    font-size: 15px;
-    vertical-align: middle;
-    opacity: 0.5;
-}
-
-.check_info:hover {
-    opacity: 0.8;
 }
 
 .box_container {
@@ -505,6 +527,7 @@ ul li.checked::before {
   justify-content: center;
   /*background-color: #90EE90;*/
   /*margin-top: 200px;*/
+  /*z-index: -1;*/
 
 }
 
@@ -523,6 +546,7 @@ ul li.checked::before {
   border-color: #4CAF50;
   /*border-width: 10px;*/
   border-style: solid;
+  z-index: 2;
 }
 
 [class$="-legend"] {
@@ -546,4 +570,23 @@ ul li.checked::before {
   height: 10px;
   margin-right: 10px;
   width: 10px;
+}
+.extrabtn {
+  background-color: rgb(0,100,0);
+  border: none;
+  color: white;
+  padding: 11px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 2px;
+  margin-right: 5px 
+}
+
+.inlinetext{
+  display:inline-block;
+}
+
+h6 {
+  display: block;
 }

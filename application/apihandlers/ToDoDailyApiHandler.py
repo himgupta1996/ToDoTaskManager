@@ -49,28 +49,31 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 			print("the task is %s" %(response))
 			return jsonify(response), 200
 		else:
-			date = request.args["date"]
+			print("The request args are %s" % request.args)
 
-			date_request = datetime.strptime(date, '%Y-%m-%d')
-			date_current = datetime.today()
-			days_difference = (date_current-date_request).days
+			
+			# date = request.args["date"]
 
-			print("days_difference is %s" % (days_difference))
+			# date_request = datetime.strptime(date, '%Y-%m-%d')
+			# date_current = datetime.today()
+			# days_difference = (date_current-date_request).days
 
-			if days_difference == 0:
-				match_dict = {'user_id': self.user_id, 'e2.status': Constants.IN_PROGRESS_STATUS}
-				tasks = self._get_user_task_information(match_dict)
-				return render_template("selfDevelopmentTools/todo_daily.html", todo =  True, tasks = tasks, date = date)
+			# print("days_difference is %s" % (days_difference))
 
-			elif days_difference > 0:
-				print("I am here.")
-				flash(Markup('You don\'t have access to tasks which are finished on back date. If you want to access those tasks, kindly check your finished/failed tasks section <a href = %s> here</a>.' % (url_for('completed_tasks'))), "danger")
-				return redirect(url_for("todo"))
+			# if days_difference == 0:
+			# 	match_dict = {'user_id': self.user_id, 'e2.status': Constants.IN_PROGRESS_STATUS}
+			# 	tasks = self._get_user_task_information(match_dict)
+			# 	return render_template("selfDevelopmentTools/todo_daily.html", todo =  True, tasks = tasks, date = date)
 
-			elif days_difference < 0:
-				match_dict = {'user_id': self.user_id, 'e2.status': Constants.YET_TO_START_STATUS, 'e2.date_added': date}
-				tasks = self._get_user_task_information(match_dict)
-				return render_template("selfDevelopmentTools/todo_daily.html", todo = True, tasks = tasks, date = date)
+			# elif days_difference > 0:
+			# 	print("I am here.")
+			# 	flash(Markup('You don\'t have access to tasks which are finished on back date. If you want to access those tasks, kindly check your finished/failed tasks section <a href = %s> here</a>.' % (url_for('completed_tasks'))), "danger")
+			# 	return redirect(url_for("todo"))
+
+			# elif days_difference < 0:
+			# 	match_dict = {'user_id': self.user_id, 'e2.status': Constants.YET_TO_START_STATUS, 'e2.date_added': date}
+			# 	tasks = self._get_user_task_information(match_dict)
+			return render_template("selfDevelopmentTools/todo_daily.html", todo = True, tasks = tasks, date = date)
 
 	def delete(self, task_id = None):
 		try:
@@ -113,24 +116,37 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 
 	def post(self, task_id = None):
 		try:
+			# print("The request data is %s" % (request.form))
+			# task_data = request.form
+			# task_id = int(round(time.time() * 1000))
+			# date = task_data["date"]
+			# date_request = datetime.strptime(date, '%Y-%m-%d')
+			# date_current = datetime.today()
+			# days_difference = (date_current-date_request).days
+			# if days_difference == 0:
+			# 	ToDoTask(task_id = task_id, title = task_data["title"], date_added = task_data["date"], date_started = task_data["date"], description=task_data["description"], task_type = "Daily", status = Constants.IN_PROGRESS_STATUS).save()
+			# 	UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
+			# 	return jsonify(task_id)
+			# elif days_difference < 0:
+			# 	ToDoTask(task_id = task_id, title = task_data["title"], date_added = task_data["date"], description=task_data["description"], task_type = "Daily", status = Constants.YET_TO_START_STATUS).save()
+			# 	UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
+			# 	return jsonify(task_id)
+			# elif days_difference > 0:
+			# 	flash(Markup('You don\'t have access to post tasks which on back date. You can access you past finished/failed tasks section <a href = %s> here</a>.' % (url_for('completed_tasks'))), "danger")
+			# 	return redirect(url_for("todo"))
 			print("The request data is %s" % (request.form))
 			task_data = request.form
 			task_id = int(round(time.time() * 1000))
-			date = task_data["date"]
-			date_request = datetime.strptime(date, '%Y-%m-%d')
-			date_current = datetime.today()
-			days_difference = (date_current-date_request).days
-			if days_difference == 0:
-				ToDoTask(task_id = task_id, title = task_data["title"], date_added = task_data["date"], date_started = task_data["date"], description=task_data["description"], task_type = "Daily", status = Constants.IN_PROGRESS_STATUS).save()
-				UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
-				return jsonify(task_id)
-			elif days_difference < 0:
-				ToDoTask(task_id = task_id, title = task_data["title"], date_added = task_data["date"], description=task_data["description"], task_type = "Daily", status = Constants.YET_TO_START_STATUS).save()
-				UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
-				return jsonify(task_id)
-			elif days_difference > 0:
-				flash(Markup('You don\'t have access to post tasks which on back date. You can access you past finished/failed tasks section <a href = %s> here</a>.' % (url_for('completed_tasks'))), "danger")
-				return redirect(url_for("todo"))
+			deadlinedate = task_data["deadline"]
+			# deadlinedate = datetime.strptime(deadlinedate, '%Y-%m-%d')
+			date_current = datetime.today().strftime('%Y-%m-%d')
+			# days_to_complete = (deadlinedate-date_current).days
+			print("I am here")
+			print("date %s %s" % (date_current, deadlinedate))
+			ToDoTask(task_id = task_id, title = task_data["title"], date_added = str(date_current), date_started = str(date_current), description=task_data["description"], task_type = "Daily", status = Constants.IN_PROGRESS_STATUS, priority= task_data["priority"], deadline_date = str(deadlinedate)).save()
+			UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
+			print("I am here 2")
+			return jsonify(task_id)
 
 		except Exception as e:
 			return jsonify("The POST call failed. Error: %s" % (str(e))), 500

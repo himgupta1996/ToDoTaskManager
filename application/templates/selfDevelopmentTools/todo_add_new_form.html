@@ -1,0 +1,69 @@
+    {% extends "layout.html" %}
+   
+    {% block content %}
+    <div class="add-new-task-form-popup" id="addNewTaskForm">
+
+        <form name="addnewtask" action="" method="post" novalidate>
+
+            {{ form.hidden_tag() }}
+
+            <p>
+                {{ form.task_title.label }}<br>
+                {{ form.task_title() }}
+                {% for error in form.task_title.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </p>
+
+            <p>
+                {{ form.task_description.label }}<br>
+                {{ form.task_description() }}
+                {% for error in form.task_description.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </p>
+
+            <p>
+                {{ form.deadline_date.label }}<br>
+                {{ form.deadline_date() }}
+                {% for error in form.deadline_date.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </p>
+
+            <p>
+                {{ form.priority.label }}<br>
+                {{ form.priority() }}
+                {% for error in form.priority.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </p>
+
+            <p style="text-align:center">
+                <!-- <div class="text-center btn-submit">{{ form.submit() }}</div> -->
+                <input type="submit" value="Add" class="btn-submit">
+            </p>
+
+
+            <!-- <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" required>
+            <br>
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" required>
+            <br class="clear">
+            <input class="btn-submit" type="submit" name="submit" value="Login"> -->
+        </form>
+
+
+        
+    </div>
+    <script>
+        function openForm() {
+          document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+          document.getElementById("myForm").style.display = "none";
+        }
+</script>
+ {% endblock %}

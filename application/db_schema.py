@@ -32,11 +32,13 @@ class ToDoTask(db.Document):
 	title = db.StringField(max_length = 255, required = True)
 	date_added = db.StringField(max_length = 10)
 	date_started = db.StringField(max_length = 10)
+	deadline_date = db.StringField(max_length = 10)
 	description = db.StringField(max_length = 255)
 	task_type = db.StringField(max_length = 10, required= True)
 	status = db.StringField(max_length = 15)
 	time_taken = db.StringField(max_length = 15)
 	days_taken = db.IntField()
+	priority = db.StringField(max_length = 5)
 
 class UserTaskAssociation(db.Document):
 	user_id = db.IntField()

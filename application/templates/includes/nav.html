@@ -1,7 +1,7 @@
 <header>
             <div class="topnav">
                 <a href="{{ url_for('index') }}" class="nav-link {% if index %}active{% endif %}"><i class="fa fa-fw fa-home"></i>Home</a>
-                <a href="{{ url_for('courses') }}" class="nav-link {% if courses %}active{% endif %}"><i class="fa fa-book"></i> Classes</a>
+                <!-- <a href="{{ url_for('courses') }}" class="nav-link {% if courses %}active{% endif %}"><i class="fa fa-book"></i> Classes</a> -->
                 <!-- <div class="dropdown">
                     <button class="dropbtn">Todo Tracker <i class="fa fa-caret-down"></i></button>
                     <div class="dropdown-content">
@@ -10,7 +10,7 @@
                 </div> -->
                 <a href="{{ url_for('todo_main') }}" class="nav-link {% if todo %}active{% endif %}"><i class="fa fa-list-alt" aria-hidden="true"></i> Todo Tracker</a>
                 {% if not session.get('username') %}
-                    <a href="{{ url_for('login') }}" class="nav-link float-right {% if login %}active{% endif %}"><i class="fa fa-fw fa-user"></i>Login</a>
+                    <a href="{{ url_for('login') }}" class="nav-link float-right {% if login %}active{% endif %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
                     <a href="{{ url_for('register') }}" class="nav-link float-right {% if register %}active{% endif %}"><i class="fa fa-sign-in"></i> Sign Up</a>
                 {% else %}
                     <!-- <a href="{{ url_for('enrollment') }}" class="nav-link {% if enrollment %}active{% endif %}"><i class="fa fa-check-square-o"></i>Enrollments</a> -->
@@ -22,7 +22,8 @@
                             <a href= "#">Friends List</a>
                         </div>
                     </div> -->
-                    <span class="dropdown"> 
+
+                    <!-- <span class="dropdown"> 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-user" aria-hidden="true"></i></a>
                         <ul class="dropdown-content">
                           <li><a href="#">a</a></li>
@@ -31,8 +32,9 @@
                           <li class="divider"></li>
                           <li><a href="#">d</a></li>
                         </ul>
-                    </span>
-                    <a href="{{ url_for('logout') }}" class="nav-link float-right {% if logout %}active{% endif %}">Logout</a>
+                    </span> -->
+                    
+                    <a href="{{ url_for('logout') }}" class="nav-link float-right {% if logout %}active{% endif %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
                 {% endif %}
             </div>
 </header>

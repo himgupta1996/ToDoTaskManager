@@ -65,6 +65,13 @@ def register():
 		return redirect(url_for('index'))
 	return render_template("register.html", form= form, title="Register", register = True)
 
+@app.route('/addnewtask')
+def add_new_task():
+	if not session.get('username'):
+		flash(Markup('Kindly login to enroll for courses. If not registered yet, kindly register<a href = %s> here</a>.' % (url_for('register'))), "danger")
+		return redirect(url_for('login'))
+	form = AddNewTaskForm()
+
 @app.route('/login', methods = ["GET", "POST"])
 def login():
 	if session.get('username'):
@@ -96,6 +103,7 @@ def login():
 			return render_template("login.html", form = form, title = "Login", login = True)
 
 	return render_template("login.html", form = form, title = "Login", login = True)
+
 
 @app.route('/logout')
 def logout():

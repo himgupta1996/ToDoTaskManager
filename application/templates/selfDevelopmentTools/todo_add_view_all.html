@@ -1,43 +1,75 @@
     {% extends "layout.html" %}
     
     {% block content %}
-        <div>
+        <!-- <div>
+            <h1>I am right here</h1>
             <h1 class="text-center">Your To Do Tasks</h1>
-            <h6 class="text-center">Date: {{ date }}</h6>
+            <br>
+        </div> -->
+
+        <div class="filtertask">
+          <form action="{{ url_for('todo_all') }}" method="get">
+              <h2 style="margin:5px">Filter your search</h2>
+              <h6 style="float: left;color:black;">Task Title:</h6>
+              <input type="text" name="task_title" id="mytitle" value="{% if filter_dict.task_title %}{{ filter_dict.task_title }}{% endif %}">
+              <h6 style="float:left;color: black">Task Status:</h6>
+              <span style="float:left">In Progress</span>
+              <input style="float:left;width:5%" value="In Progress" type="checkbox" id="InProgress" name="task_status" {% if 'In Progress' in filter_dict.task_statuses %}checked{% endif %}>
+              <span style="float:left">Completed</span>
+              <input style="float:left;width:5%" value="Completed" type="checkbox" id="Completed" name="task_status" {% if 'Completed' in filter_dict.task_statuses %}checked{% endif %}>
+              <span style="float:left">Failed</span>
+              <input style="float:left;width:5%;display: block" value="Failed" type="checkbox" id="Failed" name="task_status" {% if 'Failed' in filter_dict.task_statuses %}checked{% endif %}>
+              <br><h6></h6>
+              <h6 style="float:left;color: black">Priority:</h6>
+              <span style="float:left">P1</span>
+              <input style="float:left;width:5%" value="P1" type="checkbox" id="P1" name="priority" {% if 'P1' in filter_dict.task_priorities %}checked{% endif %}>
+              <span style="float:left">P2</span>
+              <input style="float:left;width:5%" value="P4" type="checkbox" id="P2" name="priority" {% if 'P2' in filter_dict.task_priorities %}checked{% endif %}>
+              <span style="float:left">P3</span>
+              <input style="float:left;width:5%;display: block" value="P3" type="checkbox" id="P3" name="priority" {% if 'P3' in filter_dict.task_priorities %}checked{% endif %}>
+              <span style="float:left">P4</span>
+              <input style="float:left;width:5%;display: block" value="P4" type="checkbox" id="P4" name="priority" {% if 'P4' in filter_dict.task_priorities %}checked{% endif %}>
+              <br><h6></h6>
+              <p style="color:black;float:left">Date Added:</p>
+              <input type="date" id="DateAdded" name="start_date">
+              
+              <input onclick="filterTasks()" type="submit" value="Submit" class="addTaskBtn"> 
+          </form>    
         </div>
-        <div class="addtask">
-            <h2 style="margin:5px">Add to the list</h2>
-            <input type="text" id="myInput" maxlength="4" size="4" placeholder="Task Title...">
-            <input type="text" id="myDescription" placeholder="Add description if required...">
-            <!-- <span onclick="newElement()" class="addTaskBtn text-center">Add</span> -->
-            
-            <input onclick="newElement()" type="submit" value="Submit" class="addTaskBtn">     
-        </div>
+        <!-- <div class="form-group addtask">
+          <label style="color:black;float:left;" for="tasktitle">Task Title:</label>
+          <input style="float:left;width:100%" name="tasktitle" id="tasktitle" />
+          <label style="color:black;float:left;" for="taskdescription">Task Description:</label>
+          <input style="float:left;width:100%" name="taskdescription" id="taskdescription" />
+          <h6 style="float:left;color: black;">Task Status:  </h6>
+          <span style="float:left">In Progress</span>
+          <input style="float:left;width:5%" type="checkbox" id="In Progress" name="In Progress" label="in progress">
+          <p style="float:left">Completed</p>
+          <input style="float:left;width:5%" type="checkbox" id="Completed" name="Completed">
+          <span style="float:left">Failed</span>
+          <input style="float:left;width:5%" type="checkbox" id="Failed" name="Failed">
+        </div> -->
         
         <ul id="myUL">
-            {% for task in tasks %}
-                <li class = "collapsible {% if task.e2['status']=='Completed' %}checked{% endif %}">{{ task.e2["title"] }}</li>
+            {% if not total_tasks %}
+              <h4 style="color:green;text-align: center;">No such task is present in your profile.</h4>
+            {% endif %}
+            {% for task in total_tasks %}
+                <li class = "collapsible {% if task.e2['status']=='Completed' %}checked{% endif %}">{{ task.e2["title"] }}
+                  <span class= "display_task_info {% if task.e2['status']=='Completed' %}completed{% endif %} {% if task.e2['status']=='In Progress' %}inprogress{% endif %} {% if task.e2['status']=='Failed' %}failed{% endif %}" id="display_task_info">{{ task.e2["status"] }}</span>
+                  <strong><span class="display_task_info" id="display_task_info">{{ task.e2["days_taken"] }}</span></strong>
+                </li>
                 <div class = "collapsible-content">
                     <p>Date Added: {{ task.e2["date_added"] }}</p>
                     <p>Description: {{ task.e2["description"] }}</p>
-                    <p>Status: {{ task.e2["status"] }}
+                    <p>Status: {{ task.e2["status"] }}</p>
                 </div>
                 <div id="task_id" style="display: none;">{{ task.e2["task_id"] }}</div>
             {% endfor %}
         </ul>
 
         <script>
-
-            // Create a "close" button and append it to each list item
-            var myNodelist = document.getElementsByTagName("LI");
-            var i;
-            for (i = 0; i < myNodelist.length; i++) {
-              var span = document.createElement("SPAN");
-              var txt = document.createTextNode("\u00D7");
-              span.className = "close";
-              span.appendChild(txt);
-              myNodelist[i].appendChild(span);
-            }
+          // ewument.getElementById("DateAdded").defaultValue = filter_dict.start_date;
 
             // Create a "check info" dropdown and append it to each list item
             var myNodelist = document.getElementsByTagName("LI");
@@ -47,7 +79,21 @@
               var txt = document.createTextNode("Check Task Info");
               span.className = "check_info";
               span.appendChild(txt);
-              myNodelist[i].appendChild(span);
+              // myNodelist[i].appendChild(span);
+              myNodelist[i].insertBefore(span, myNodelist[i].firstChild)
+            }
+
+            // Create a "close" button and append it to each list item
+            var myNodelist = document.getElementsByTagName("LI");
+            var i;
+            for (i = 0; i < myNodelist.length; i++) {
+              var span = document.createElement("SPAN");
+              var txt = document.createTextNode("\u00D7");
+              span.className = "close";
+              // span.classList.add("check_info");
+              span.appendChild(txt);
+              // myNodelist[i].appendChild(span);
+              myNodelist[i].insertBefore(span, myNodelist[i].firstChild)
             }
 
             // var coll = document.getElementsByClassName("check_info");
@@ -115,28 +161,48 @@
 
             // Add a "checked" symbol when clicking on a list item
             var list = document.getElementById('myUL');
-            console.log("The list is"+list.innerHTML)
+            // console.log("The list is"+list.innerHTML)
             list.addEventListener('click', function(ev) {
                 console.log("I am here")
                 if (ev.target.tagName === 'LI') {
                   var task_id = ev.target.nextElementSibling.nextElementSibling.innerHTML
+                  console.log("The next elemet is "+ev.target.nextElementSibling.innerHTML)
                   console.log("the task id is")
-                  console.log(task_id)
-                  ev.target.classList.toggle('checked');                   
+                  console.log(task_id)                   
                   var xhttp = new XMLHttpRequest();
                   xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
                       console.log(this.responseText)
+                      var obj = JSON.parse(this.responseText);
+                      if (obj.status == "In Progress"){
+                        if (confirm("Are you sure you have completed the task. Please be honest to yourself and update accordingly.")){
+                          var putxhttp = new XMLHttpRequest();
+                          putxhttp.onreadystatechange = function(){
+                            if (this.readyState == 4 && this.status == 200){
+                              console.log(this.responseText)
+                              ev.target.classList.toggle('checked');
+                              childrens = ev.target.children;
+                              for (i = 0; i < childrens.length; i++) {
+                                console.log(childrens[i])
+                                if (childrens[i].classList.contains("inprogress")) {
+                                  console.log(childrens[i].classList)
+                                  childrens[i].classList.toggle("inprogress")
+                                  childrens[i].classList.add("completed")
+                                  childrens[i].innerHTML = "Completed"
+                                }
+                              }
+                            }
+                          };
+                          putxhttp.open("PUT", "{{ url_for('dailytodo')}}/"+task_id, true);
+                          putxhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                          putxhttp.send("status=Completed");
+                        }
+                      }
+
                     }
                   };
-                  xhttp.open("PUT", "{{ url_for('dailytodo')}}/"+task_id, true);
-                  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                  if (ev.target.classList.contains('checked')) {
-                    xhttp.send("status=Completed");
-                  }
-                  else {
-                    xhttp.send("status=In Progress")
-                  }
+                  xhttp.open("GET", "{{ url_for('dailytodo')}}/"+task_id, true);
+                  xhttp.send();
                 }
             }, false);
 
@@ -182,6 +248,18 @@
                 }
                 console.log("this")
                 console.log(this)
+            }
+
+            // Filter the tasks according to filter params
+            function filterTasks() {
+              var filter1 = document.getElementById("mytitle").value.toUpperCase()
+              var filter2 = document.getElementById("myDescription").value.toUpperCase()
+              var filter3 = document.getElementById("DateAdded").value.toUpperCase()
+              var filter4 = document.getElementById("InProgress").value.toUpperCase()
+              var filter5 = document.getElementById("Completed").value.toUpperCase()
+              var filter6 = document.getElementById("Failed").value.toUpperCase()
+
+
             }
 
             // Create a new list item when clicking on the "Add" button
