@@ -108,7 +108,7 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 					
 					if days_difference <= expected_days_difference:
 						task_score = 10
-						task_reward_points = int(Constants.PRIORITY_VALUE_MAPPING[priority]*(float((deadline_date-completion_date).days)/expected_days_difference))
+						task_reward_points = int(Constants.PRIORITY_VALUE_MAPPING[priority]*(float((deadline_date-completion_date).days)/10))
 					else:
 						task_score = 10 - int((Constants.PRIORITY_VALUE_MAPPING[priority]*(completion_date-deadline_date).days)/10)
 						task_reward_points = 0

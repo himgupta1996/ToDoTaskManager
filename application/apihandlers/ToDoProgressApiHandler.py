@@ -89,11 +89,11 @@ class ToDoProgressApiHandler(AbstractApiHandler):
 
 		labels = [Constants.IN_PROGRESS_STATUS, Constants.COMPLETED_STATUS, Constants.FAILED_STATUS, Constants.YET_TO_START_STATUS]
 		values = [inprogress_tasks_count, completed_tasks_count, failed_tasks_count, yet_to_start_tasks_count]
-		
-		total_task_pie_values = [float(inprogress_tasks_count)/total_tasks_count*100, 
-			float(completed_tasks_count)/total_tasks_count*100,
-			float(failed_tasks_count)/total_tasks_count*100,
-			float(yet_to_start_tasks_count)/total_tasks_count*100]
+		# total_task_pie_values = [0,0,0,0]
+		total_task_pie_values = [float(inprogress_tasks_count)/total_tasks_count*100 if total_tasks_count else 0,
+			float(completed_tasks_count)/total_tasks_count*100 if total_tasks_count else 0,
+			float(failed_tasks_count)/total_tasks_count*100 if total_tasks_count else 0,
+			float(yet_to_start_tasks_count)/total_tasks_count*100 if total_tasks_count else 0]
 
 		colors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA"]
 

@@ -57,8 +57,10 @@ def register():
 		password = form.password.data
 		first_name = form.first_name.data
 		last_name = form.last_name.data
+		score = 0
+		reward_points = 0
 
-		user = User(user_id = user_id, email=email, first_name=first_name, last_name=last_name)
+		user = User(user_id = user_id, email=email, first_name=first_name, last_name=last_name, score = score, reward_points = reward_points)
 		user.set_password(password)
 		user.save()
 		flash("%s, You are successfully registered!." % (first_name), "success")

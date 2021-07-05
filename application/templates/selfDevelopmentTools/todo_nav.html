@@ -2,7 +2,7 @@
             <div class="todotopnav">
                 <a href="{{ url_for('todo_all') }}" class="nav-link {% if todo_all %}active{% endif %}"><i class="fa fa-tasks" aria-hidden="true"></i> Your Tasks</a>
                 <a href="{{ url_for('todo_progress') }}" class="nav-link {% if todo_progress %}active{% endif %}"><i class="fa fa-bar-chart" aria-hidden="true"></i> Task Progress</a>
-                <a href="{{ url_for('todo') }}" class="nav-link {% if todo_manage %}active{% endif %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Manage Tasks</a>
+{#                <a href="{{ url_for('todo') }}" class="nav-link {% if todo_manage %}active{% endif %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Manage Tasks</a>#}
                 <!-- <a href="#" id="scorespan" style="float: right">Score</a> -->
                 <button onclick="openTaskTally()" class="extrabtn" style="float: right;display: inline-block;">Your Score Tally</button>
                 <button id=addnewtaskbutton onclick="openAddForm()" class="extrabtn" style="float: right;display: inline-block;"> Add New Task</button>
