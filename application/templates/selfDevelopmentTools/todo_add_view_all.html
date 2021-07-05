@@ -188,7 +188,7 @@
                           putxhttp.onreadystatechange = function(){
                             if (this.readyState == 4 && this.status == 200){
                               console.log(this.responseText)
-                              ev.target.classList.toggle('checked');
+                              {#ev.target.classList.toggle('checked');#}
                               childrens = ev.target.children;
                               for (i = 0; i < childrens.length; i++) {
                                 console.log(childrens[i])
@@ -199,6 +199,9 @@
                                   childrens[i].innerHTML = "Completed"
                                 }
                               }
+                            }
+                            else if(this.readyState == 4 && this.status == 500){
+                                alert(this.responseText)
                             }
                           };
                           putxhttp.open("PUT", "{{ url_for('dailytodo')}}/"+task_id, true);

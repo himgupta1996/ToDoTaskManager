@@ -120,6 +120,5 @@ class ToDoAllApiHandler(AbstractApiHandler):
 				date_current = datetime.today()
 				days_difference = (date_current-date_added).days
 				task["e2"]["days_taken"] = days_difference+1
-		
 
 		return render_template("selfDevelopmentTools/todo_add_view_all.html", todo = True, todo_all = True, total_tasks = filter_tasks, filter_dict= filter_dict, user_id = self.user_id)
