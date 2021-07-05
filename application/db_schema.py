@@ -9,6 +9,8 @@ class User(UserMixin, db.Document):
 	last_name = db.StringField(max_length = 50)
 	email = db.StringField(max_length = 50, unique = True)
 	password = db.StringField(max_length = 100)
+	score = db.IntField()
+	reward_points = db.IntField()
 
 	def set_password(self, password):
 		self.password = generate_password_hash(password)
@@ -33,6 +35,7 @@ class ToDoTask(db.Document):
 	date_added = db.StringField(max_length = 10)
 	date_started = db.StringField(max_length = 10)
 	deadline_date = db.StringField(max_length = 10)
+	completion_date = db.StringField(max_length = 10)
 	description = db.StringField(max_length = 255)
 	task_type = db.StringField(max_length = 10, required= True)
 	status = db.StringField(max_length = 15)
@@ -43,6 +46,7 @@ class ToDoTask(db.Document):
 class UserTaskAssociation(db.Document):
 	user_id = db.IntField()
 	task_id = db.IntField()
-	user_task_score = db.IntField()
+	task_score = db.IntField()
+	task_reward_points = db.IntField()
 
 

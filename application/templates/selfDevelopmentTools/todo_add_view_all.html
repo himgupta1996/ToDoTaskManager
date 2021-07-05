@@ -19,6 +19,8 @@
               <input style="float:left;width:5%" value="Completed" type="checkbox" id="Completed" name="task_status" {% if 'Completed' in filter_dict.task_statuses %}checked{% endif %}>
               <span style="float:left">Failed</span>
               <input style="float:left;width:5%;display: block" value="Failed" type="checkbox" id="Failed" name="task_status" {% if 'Failed' in filter_dict.task_statuses %}checked{% endif %}>
+              <input style="float:right;width:5%;display: block" value="Grace" type="checkbox" id="Grace" name="Grace" {% if filter_dict.Grace %}checked{% endif %}>
+              <h6 style="float:right;color: black">Task in Grace Period: </h6>
               <br><h6></h6>
               <h6 style="float:left;color: black">Priority:</h6>
               <span style="float:left">P1</span>
@@ -29,9 +31,12 @@
               <input style="float:left;width:5%;display: block" value="P3" type="checkbox" id="P3" name="priority" {% if 'P3' in filter_dict.task_priorities %}checked{% endif %}>
               <span style="float:left">P4</span>
               <input style="float:left;width:5%;display: block" value="P4" type="checkbox" id="P4" name="priority" {% if 'P4' in filter_dict.task_priorities %}checked{% endif %}>
+              
               <br><h6></h6>
               <p style="color:black;float:left">Date Added:</p>
               <input type="date" id="DateAdded" name="start_date">
+              <p style="color:black;float:left">Deadline Date:</p>
+              <input type="date" id="DeadlineDate" name="deadline_date">
               
               <input onclick="filterTasks()" type="submit" value="Submit" class="addTaskBtn"> 
           </form>    
@@ -55,14 +60,17 @@
               <h4 style="color:green;text-align: center;">No such task is present in your profile.</h4>
             {% endif %}
             {% for task in total_tasks %}
-                <li class = "collapsible {% if task.e2['status']=='Completed' %}checked{% endif %}">{{ task.e2["title"] }}
+                <li {% if task.e2["days_left"] and task.e2["days_left"] < 0 %}style="background: rgb(255,0,0,0.5);"{% endif %} class = "collapsible {% if task.e2['status']=='Failed' %}checked{% endif %}">{{ task.e2["title"] }}
                   <span class= "display_task_info {% if task.e2['status']=='Completed' %}completed{% endif %} {% if task.e2['status']=='In Progress' %}inprogress{% endif %} {% if task.e2['status']=='Failed' %}failed{% endif %}" id="display_task_info">{{ task.e2["status"] }}</span>
-                  <strong><span class="display_task_info" id="display_task_info">{{ task.e2["days_taken"] }}</span></strong>
+                  <span class="display_task_info" id="display_task_info">{% if task.e2["status"]=='In Progress' %}{% if task.e2["days_left"] < 0 %}<strong>Grace Day:</strong> {{ -1*task.e2["days_left"] }} {% else %}<strong>Days Left:</strong> {{ task.e2["days_left"] }} {%  endif %}{% endif %}</span>
                 </li>
                 <div class = "collapsible-content">
                     <p>Date Added: {{ task.e2["date_added"] }}</p>
                     <p>Description: {{ task.e2["description"] }}</p>
                     <p>Status: {{ task.e2["status"] }}</p>
+                    {% if task.e2["days_left"] %}
+                      <p>Days Left for the task to be completed: {{ task.e2["days_left"] }}</p>
+                    {% endif %}
                 </div>
                 <div id="task_id" style="display: none;">{{ task.e2["task_id"] }}</div>
             {% endfor %}
@@ -70,7 +78,7 @@
 
         <script>
           // ewument.getElementById("DateAdded").defaultValue = filter_dict.start_date;
-
+            // localStorage.setItem("score", 60);
             // Create a "check info" dropdown and append it to each list item
             var myNodelist = document.getElementsByTagName("LI");
             var i;
@@ -231,7 +239,7 @@
                       content.className = "task_description_body";
                     }
                     else{
-                      content.innerHTML = "<p><b>Date Added:</b> "+obj.date_added+"</p><p><b>Date Started:</b> "+obj.date_started+"</p><p><b>Description:</b> "+obj.description+"</p><p><b>Status:</b> "+obj.status+"</p>";
+                      content.innerHTML = "<b>Date Added:</b> "+obj.date_added+" | <b>Deadline Date:</b> "+obj.deadline_date+" | <b>Description:</b> "+obj.description+" | <b>Status:</b> "+obj.status+" | <b>Priority:</b> "+obj.priority;
                       content.className = "task_description_body";
                     }
                   }
@@ -250,81 +258,69 @@
                 console.log(this)
             }
 
-            // Filter the tasks according to filter params
-            function filterTasks() {
-              var filter1 = document.getElementById("mytitle").value.toUpperCase()
-              var filter2 = document.getElementById("myDescription").value.toUpperCase()
-              var filter3 = document.getElementById("DateAdded").value.toUpperCase()
-              var filter4 = document.getElementById("InProgress").value.toUpperCase()
-              var filter5 = document.getElementById("Completed").value.toUpperCase()
-              var filter6 = document.getElementById("Failed").value.toUpperCase()
-
-
-            }
-
             // Create a new list item when clicking on the "Add" button
-            function newElement() {
-              var xhttp = new XMLHttpRequest();
-              var inputValue = document.getElementById("myInput").value;
-              if (inputValue === '') {
-                alert("You must add something for the task title!");
-              }
-              else {
-                var descriptionValue = document.getElementById("myDescription").value;
-                xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                  var li = document.createElement("li");
-                  var task_info_div = document.createElement('div');
-                  var task_id_div = document.createElement('div');
-                  console.log(typeof inputValue)
-                  var t = document.createTextNode(inputValue);
-                  li.appendChild(t);
-                  document.getElementById("myUL").appendChild(li);
-                  document.getElementById("myUL").appendChild(task_info_div);
-                  document.getElementById("myUL").appendChild(task_id_div);
-                  document.getElementById("myInput").value = "";
-                  document.getElementById("myDescription").value = "";
+            // function newElement() {
+            //   var xhttp = new XMLHttpRequest();
+            //   var inputValue = document.getElementById("myInput").value;
+            //   if (inputValue === '') {
+            //     alert("You must add something for the task title!");
+            //   }
+            //   else {
+            //     var descriptionValue = document.getElementById("myDescription").value;
+            //     xhttp.onreadystatechange = function() {
+            //     if (this.readyState == 4 && this.status == 200) {
+            //       var li = document.createElement("li");
+            //       var task_info_div = document.createElement('div');
+            //       var task_id_div = document.createElement('div');
+            //       console.log(typeof inputValue)
+            //       var t = document.createTextNode(inputValue);
+            //       li.appendChild(t);
+            //       document.getElementById("myUL").appendChild(li);
+            //       document.getElementById("myUL").appendChild(task_info_div);
+            //       document.getElementById("myUL").appendChild(task_id_div);
+            //       document.getElementById("myInput").value = "";
+            //       document.getElementById("myDescription").value = "";
 
-                  var span = document.createElement("SPAN");
-                  var txt = document.createTextNode("\u00D7");
-                  span.className = "close";
-                  span.addEventListener("click", close)
-                  span.appendChild(txt);
-                  li.appendChild(span);
+            //       var span = document.createElement("SPAN");
+            //       var txt = document.createTextNode("\u00D7");
+            //       span.className = "close";
+            //       span.addEventListener("click", close)
+            //       span.appendChild(txt);
+            //       li.appendChild(span);
 
-                  var span = document.createElement("SPAN");
-                  var txt = document.createTextNode("Check Task Info");
-                  span.className = "check_info";
-                  span.addEventListener("click", click_check_info)
-                  // span.setAttribute("onclick", "click_check_info()")
+            //       var span = document.createElement("SPAN");
+            //       var txt = document.createTextNode("Check Task Info");
+            //       span.className = "check_info";
+            //       span.addEventListener("click", click_check_info)
+            //       // span.setAttribute("onclick", "click_check_info()")
 
-                  span.appendChild(txt);
-                  li.appendChild(span);
+            //       span.appendChild(txt);
+            //       li.appendChild(span);
 
-                  for (i = 0; i < close.length; i++) {
-                    close[i].onclick = function() {
-                      var div = this.parentElement;
-                      div.style.display = "none";
-                    }
-                  }
-                  console.log(typeof this.responseText)
-                  task_id_div.innerHTML = this.responseText
-                  task_id_div.setAttribute("id", "task_id");
-                  task_id_div.setAttribute("style", "display: none;")
-                  task_info_div.innerHTML = "<p>Date Added: {{ date }}</p><p>Description: "+descriptionValue+"</p><p>Status: In Progress</p>";
-                  task_info_div.setAttribute("class", "collapsible-content")
-                  }
-                  else if(this.readyState == 4 && this.status == 500){
-                    document.getElementById("myInput").value = "";
-                    document.getElementById("myDescription").value = "";
-                    alert(this.responseText)
-                  }
-                };
-                xhttp.open("POST", "{{ url_for('dailytodo')}}", true);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("status=In Progress&title="+inputValue+"&date={{ date }}&description="+descriptionValue);
-              }
-            }
+            //       for (i = 0; i < close.length; i++) {
+            //         close[i].onclick = function() {
+            //           var div = this.parentElement;
+            //           div.style.display = "none";
+            //         }
+            //       }
+            //       console.log(typeof this.responseText)
+            //       task_id_div.innerHTML = this.responseText
+            //       task_id_div.setAttribute("id", "task_id");
+            //       task_id_div.setAttribute("style", "display: none;")
+            //       task_info_div.innerHTML = "<p>Date Added: {{ date }}</p><p>Description: "+descriptionValue+"</p><p>Status: In Progress</p>";
+            //       task_info_div.setAttribute("class", "collapsible-content")
+            //       }
+            //       else if(this.readyState == 4 && this.status == 500){
+            //         document.getElementById("myInput").value = "";
+            //         document.getElementById("myDescription").value = "";
+            //         alert(this.responseText)
+            //       }
+            //     };
+            //     xhttp.open("POST", "{{ url_for('dailytodo')}}", true);
+            //     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            //     xhttp.send("status=In Progress&title="+inputValue+"&date={{ date }}&description="+descriptionValue);
+            //   }
+            // }
 
         </script>
             
