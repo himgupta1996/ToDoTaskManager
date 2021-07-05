@@ -3,7 +3,13 @@
     {% block content %}
       <div class="text-center">
         <br>
-        <a href="{{ url_for('todo_all')}}" style="font-size: 28.8px; color: #4CAF50;">Check All of your Tasks here.</a>
+        <span id=LastWeek style="font-size: 28.8px; color: white;background-color: #4CAF50; border-radius: 5px">Last 7 Days</span>
+        <span id=LastMonth style="font-size: 28.8px;">|</span>
+        <span id=LastMonth onclick = "call_month_analysis()" style="font-size: 28.8px;">Last 12 Months</span>
+        <span id=LastMonth style="font-size: 28.8px;">|</span>
+        <span id=LastYear style="font-size: 28.8px;">Last 5 years</span>
+
+        <!-- <a href="{{ url_for('todo_all')}}" style="font-size: 28.8px; color: font-size: 28.8px; color: #4CAF50;">Check All of your Tasks here.</a> -->
         <br>
       </div>
       <div class="graphs_box_container">
@@ -71,7 +77,6 @@
       </div> -->
 
       <script>
-
         //////////////////////// ALL TASKS BAR CHART ///////////////////////////
       // bar chart data
       // var barData = {
@@ -101,8 +106,15 @@
 
       max = {{max}}
 
+      function handleClick(evt)
+      {
+        var activeElement = myBarChart.getElementAtEvent(evt);
+        console.log(activeElement)
+      }
+
       // var chart = new Chart(mychart, barData);
       var options = {
+        onClick: handleClick,
         scales: {
           yAxes: [ {
             display: true,

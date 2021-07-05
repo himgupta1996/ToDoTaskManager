@@ -67,7 +67,8 @@ class ToDoProgressApiHandler(AbstractApiHandler):
 
 		for task in completed_tasks:
 			print("The task is %s" % (task))
-			completed_task_values[int(task["e2"]["days_taken"]) - 1] += 1
+
+			completed_task_values[int(6) - 1] += 1
 		print("The completed list %s" % (completed_task_values))
 
 		inprogress_task_labels = [str(i) for i in range(1,global_constants.DAILY_TASK_DAYS_LIMITATION + 1)]
@@ -87,8 +88,8 @@ class ToDoProgressApiHandler(AbstractApiHandler):
 
 
 		labels = [Constants.IN_PROGRESS_STATUS, Constants.COMPLETED_STATUS, Constants.FAILED_STATUS, Constants.YET_TO_START_STATUS]
-
 		values = [inprogress_tasks_count, completed_tasks_count, failed_tasks_count, yet_to_start_tasks_count]
+		
 		total_task_pie_values = [float(inprogress_tasks_count)/total_tasks_count*100, 
 			float(completed_tasks_count)/total_tasks_count*100,
 			float(failed_tasks_count)/total_tasks_count*100,
@@ -104,6 +105,7 @@ class ToDoProgressApiHandler(AbstractApiHandler):
 			labels=labels, \
 			values=values, \
 			colors = colors, \
+			user_id = self.user_id, \
 			completed_task_labels = completed_task_labels, \
 			completed_task_values = completed_task_values, \
 			total_task_pie_values = total_task_pie_values, \

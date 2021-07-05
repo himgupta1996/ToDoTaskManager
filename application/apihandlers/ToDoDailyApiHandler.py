@@ -44,8 +44,8 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 	def get(self, task_id = None):
 		if task_id:
 			print("The task in get is %s" % (task_id))
-			task = ToDoTask.objects(task_id=str(task_id)).first()
-			response = {"status": task.status, "description": task.description, "date_added":task.date_added, "title": task.title, "date_started": task.date_started}
+			response = ToDoTask.objects(task_id=str(task_id)).first()
+			# response = {"status": task.status, "description": task.description, "date_added":task.date_added, "title": task.title, "date_started": task.date_started}
 			print("the task is %s" %(response))
 			return jsonify(response), 200
 		else:
@@ -73,7 +73,7 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 			# elif days_difference < 0:
 			# 	match_dict = {'user_id': self.user_id, 'e2.status': Constants.YET_TO_START_STATUS, 'e2.date_added': date}
 			# 	tasks = self._get_user_task_information(match_dict)
-			return render_template("selfDevelopmentTools/todo_daily.html", todo = True, tasks = tasks, date = date)
+			return render_template("selfDevelopmentTools/todo_daily.html", todo = True, tasks = tasks, date = date, user_id = self.user_id)
 
 	def delete(self, task_id = None):
 		try:
@@ -100,13 +100,31 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 				task = ToDoTask.objects(task_id=task_id).first()
 				if task_status == Constants.COMPLETED_STATUS:
 					date_added = datetime.strptime(task.date_added, '%Y-%m-%d')
-					date_current = datetime.today()
-					days_difference = (date_current-date_added).days
+					deadline_date = datetime.strptime(task.deadline_date, '%Y-%m-%d')
+					priority = task.priority
+					completion_date = datetime.today()
+					days_difference = (completion_date-date_added).days
+					expected_days_difference = (deadline_date-date_added).days
+					
+					if days_difference <= expected_days_difference:
+						task_score = 10
+						task_reward_points = int(Constants.PRIORITY_VALUE_MAPPING[priority]*(float((deadline_date-completion_date).days)/expected_days_difference))
+					else:
+						task_score = 10 - int((Constants.PRIORITY_VALUE_MAPPING[priority]*(completion_date-deadline_date).days)/10)
+						task_reward_points = 0
+
 					user_task_association = UserTaskAssociation.objects(task_id = task_id, user_id = self.user_id)
-					user_task_association.update(user_task_score = ((Constants.DAILY_TASK_DAYS_TAKEN_UPPER_BOUND - (days_difference + 1))*100)//Constants.DAILY_TASK_DAYS_TAKEN_UPPER_BOUND)
+					user_task_association.update(task_score = task_score, task_reward_points = task_reward_points)
+
+					user = User.objects(user_id = self.user_id).first()
+					before_user_score = int(user.score)
+					before_reward_points = int(user.reward_points)
+					user.update(score = before_user_score + task_score, reward_points = task_reward_points+before_reward_points)
+
+					task.update(completion_date = completion_date.strftime('%Y-%m-%d'))
+
 					# if the user completes the task on the same day, it is counted as 1 day, if on 2nd day, it is counted as 2 days
 					# therefore we are adding the 1 to the days_difference
-					task.update(days_taken = days_difference+1)
 				task.update(status = task_status)
 				return "PUT call successful."
 			else:
@@ -116,23 +134,6 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 
 	def post(self, task_id = None):
 		try:
-			# print("The request data is %s" % (request.form))
-			# task_data = request.form
-			# task_id = int(round(time.time() * 1000))
-			# date = task_data["date"]
-			# date_request = datetime.strptime(date, '%Y-%m-%d')
-			# date_current = datetime.today()
-			# days_difference = (date_current-date_request).days
-			# if days_difference == 0:
-			# 	ToDoTask(task_id = task_id, title = task_data["title"], date_added = task_data["date"], date_started = task_data["date"], description=task_data["description"], task_type = "Daily", status = Constants.IN_PROGRESS_STATUS).save()
-			# 	UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
-			# 	return jsonify(task_id)
-			# elif days_difference < 0:
-			# 	ToDoTask(task_id = task_id, title = task_data["title"], date_added = task_data["date"], description=task_data["description"], task_type = "Daily", status = Constants.YET_TO_START_STATUS).save()
-			# 	UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
-			# 	return jsonify(task_id)
-			# elif days_difference > 0:
-			# 	flash(Markup('You don\'t have access to post tasks which on back date. You can access you past finished/failed tasks section <a href = %s> here</a>.' % (url_for('completed_tasks'))), "danger")
 			# 	return redirect(url_for("todo"))
 			print("The request data is %s" % (request.form))
 			task_data = request.form
@@ -144,7 +145,7 @@ class ToDoDailyApiHandler(AbstractApiHandler):
 			print("I am here")
 			print("date %s %s" % (date_current, deadlinedate))
 			ToDoTask(task_id = task_id, title = task_data["title"], date_added = str(date_current), date_started = str(date_current), description=task_data["description"], task_type = "Daily", status = Constants.IN_PROGRESS_STATUS, priority= task_data["priority"], deadline_date = str(deadlinedate)).save()
-			UserTaskAssociation(user_id = self.user_id, task_id = task_id).save()
+			UserTaskAssociation(user_id = self.user_id, task_id = task_id, task_score = 0, task_reward_points = 0).save()
 			print("I am here 2")
 			return jsonify(task_id)
 

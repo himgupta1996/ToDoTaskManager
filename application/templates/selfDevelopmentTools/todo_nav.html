@@ -3,9 +3,11 @@
                 <a href="{{ url_for('todo_all') }}" class="nav-link {% if todo_all %}active{% endif %}"><i class="fa fa-tasks" aria-hidden="true"></i> Your Tasks</a>
                 <a href="{{ url_for('todo_progress') }}" class="nav-link {% if todo_progress %}active{% endif %}"><i class="fa fa-bar-chart" aria-hidden="true"></i> Task Progress</a>
                 <a href="{{ url_for('todo') }}" class="nav-link {% if todo_manage %}active{% endif %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Manage Tasks</a>
-                <button onclick="openAddForm()" class="extrabtn" style="float: right;display: inline-block;"><i class="fa fa-plus" aria-hidden="true"></i> New Task</button>
+                <!-- <a href="#" id="scorespan" style="float: right">Score</a> -->
+                <button onclick="openTaskTally()" class="extrabtn" style="float: right;display: inline-block;">Your Score Tally</button>
+                <button id=addnewtaskbutton onclick="openAddForm()" class="extrabtn" style="float: right;display: inline-block;"> Add New Task</button>
                 <div class="form-popup" id="newAddForm">
-				  <form class="form-container">
+				  <form class="form-container" onsubmit="closeAddForm();return false">
 				    <h1>Add a New task</h1>
 
 				    <label for="tasktitle"><b>Task Title:</b></label>
@@ -16,35 +18,64 @@
 
 				    <label for="prioritysetting"><b>Priority:</b></label>
 				    <div id=prioritysetting>
-				    	<input type="radio" id="p1" value="P1">
+				    	<input type="radio" id="p1" value="P1" name="priority">
 						<label for="p1">P1</label>
-						<input type="radio" id="p2" value="P2">
+						<input type="radio" id="p2" value="P2" name="priority">
 						<label for="p2">P2</label>
-						<input type="radio" id="p3" value="P3">
+						<input type="radio" id="p3" value="P3" name="priority">
 						<label for="p3">P3</label>
-						<input type="radio" id="p4" value="P3">
+						<input type="radio" id="p4" value="P3" name="priority">
 						<label for="p4">P4</label>
 				    </div>
 
 				    <label for="deadline">Enter the date till which you want the task to be completed:</label>
-                    <input type="date" id="deadline" name="date" required>
+                    <input type="date" id="deadline" required>
 
-				    <button type="submit" class="btn" onclick="closeAddForm()">Add</button>
+				    <button type="submit" class="btn">Add</button>
 				    <!-- <button type="button" class="btn cancel" onclick="closeAddForm()">Close</button> -->
 				  </form>
+				</div>
+				<div id="overlay" onclick="off_overlay()">
+  					<div id="score_text">Null</div>
 				</div>
             </div>
 
 
             <script>
+
 				function openAddForm() {
 					console.log("I am in open form")
 				  if (document.getElementById("newAddForm").style.display === "block"){
 				  	document.getElementById("newAddForm").style.display = "none";
+				  	document.getElementById("addnewtaskbutton").innerHTML = "Add New Task"
 				  }
 				  else {
 				  	document.getElementById("newAddForm").style.display = "block";
+				  	document.getElementById("addnewtaskbutton").innerHTML = "Close Add Form"
 				  }
+				}
+				function off_overlay() {
+				  document.getElementById("overlay").style.display = "none";
+				}
+
+				function openTaskTally() {
+					console.log("I am in task tally form")
+					var xhttp = new XMLHttpRequest();
+	                xhttp.onreadystatechange = function() {
+	                    if (this.readyState == 4 && this.status == 200) {
+	                        console.log("I am in scorespan")
+	                        console.log(this.responseText)
+	                        document.getElementById("overlay").style.display = "block";
+	                        var obj = JSON.parse(this.responseText);
+	                       	document.getElementById("score_text").innerHTML = "<p>Total Score: "+obj.score+"</p><br><p>Reward Points: "+obj.reward_points
+	                    }
+	                    else if(this.readyState == 4 && this.status == 500){
+	                      alert(this.responseText)
+	                    }
+	                };
+	                xhttp.open("GET", "{{ url_for('user')}}/{{ user_id }}", true);
+	                xhttp.send();
+
 				}
 
 				function closeAddForm() {
@@ -53,22 +84,28 @@
 					var deadline = document.getElementById('deadline').value; 
 					var priorityvalues = document.getElementById('prioritysetting'); 
 					var c = priorityvalues.childNodes;
-
-					console.log("The priorityvalues are"+priorityvalues)
               
 		            for(i = 0; i < c.length; i++) { 
 		                if(c[i].checked) 
 		                var priority = c[i].value; 
 		            } 
 
-				  	document.getElementById("newAddForm").style.display = "none";
+				  	
 				  	var xhttp = new XMLHttpRequest();
 		            xhttp.onreadystatechange = function() {
 		                if (this.readyState == 4 && this.status == 200) {
 		                    console.log("I am in add new")
-		                    console.log(this.responseText)
-		                    // description.style.display = "none"
-		                    // div.style.display = "none";
+		                    console.log(this.responseText) 
+		                    document.getElementById("tasktitle").value = "";
+		                    document.getElementById("taskdesc").value = "";
+		                    document.getElementById('deadline').value = "";
+		                    var priorityvalues = document.getElementById('prioritysetting');
+		                    var c = priorityvalues.childNodes;
+		                    for(i = 0; i < c.length; i++) { 
+				                c[i].checked = false;
+				            } 
+
+
 		                }
 		                else if(this.readyState == 4 && this.status == 500){
 		                  alert(this.responseText)
@@ -78,5 +115,6 @@
 		            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		            xhttp.send("status=In Progress&title="+tasktitle+"&description="+taskdescription+"&priority="+priority+"&deadline="+deadline);
 					}
+					document.getElementById("newAddForm").style.display = "none";
 			</script>
 </header>

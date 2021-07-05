@@ -185,11 +185,16 @@ def responseapi(idx=None):
 	return Response(json.dumps(response), mimetype= "application/json")
 
 @app.route('/user')
-def user():
+@app.route('/user/<user_id>', methods = ["GET"])
+def user(user_id = None):
 	#User(id =21, first_name = "Himanshu", last_name = "Gupta", email = "himanshu.gupta@citrix.com", password = "abcd1234").save()
-	users = User.objects.all()
-	print(users.__dict__)
-	return render_template("user.html", users = users)
+	if user_id:
+		user = User.objects(user_id = user_id)[0]
+		return jsonify(user), 200
+	else:
+		users = User.objects.all()
+		print(users.__dict__)
+		return render_template("user.html", users = users)
 
 @app.route('/todo_main')
 def todo_main():
@@ -199,21 +204,25 @@ def todo_main():
 
 	user_id = session.get('user_id')
 
-	print(Constants.__dict__)
-	tasks = ToDoTask.objects(task_type = Constants.DAILY_TASK_TYPE, status = Constants.IN_PROGRESS_STATUS)
-	for task in tasks:
-		task_id = task.task_id
-		print("The task is %s" % (task))
-		date_added = datetime.strptime(task.date_added, '%Y-%m-%d')
-		date_current = datetime.today()
-		##finding if it has been 7 days since the date added
-		if (date_current-date_added).days > global_constants.DAILY_TASK_DAYS_LIMITATION:
-			print("greater than 7")
-			task.update(status = Constants.FAILED_STATUS)
-			user_task_association = UserTaskAssociation.objects(task_id = task_id, user_id = user_id)
-			user_task_association.update(user_task_score = 0)
+	# print(Constants.__dict__)
+	# tasks = ToDoTask.objects(task_type = Constants.DAILY_TASK_TYPE, status = Constants.IN_PROGRESS_STATUS)
+	# for task in tasks:
+	# 	task_id = task.task_id
+	# 	print("The task is %s" % (task))
+	# 	date_added = datetime.strptime(task.date_added, '%Y-%m-%d')
+	# 	date_current = datetime.today() 
+	# 	deadline_date = datetime.strptime(task.deadline_date, '%Y-%m-%d')
+	# 	##finding if it has been 7 days since the date added
+	# 	if deadline_date > date_current:
+	# 		task.update(status = Constants.FAILED_STATUS)
 
-	return render_template("selfDevelopmentTools/todo_landing.html", todo = True)
+	# 	if (date_current-date_added).days > global_constants.DAILY_TASK_DAYS_LIMITATION:
+	# 		print("greater than 7")
+	# 		task.update(status = Constants.FAILED_STATUS)
+	# 		user_task_association = UserTaskAssociation.objects(task_id = task_id, user_id = user_id)
+	# 		user_task_association.update(user_task_score = 0)
+
+	return render_template("selfDevelopmentTools/todo_landing.html", todo = True, user_id = user_id)
 
 @app.route('/todo')
 def todo():
@@ -248,9 +257,9 @@ def dailytodo(task_id = None):
 		return redirect(url_for('login'))
 	user_id = session.get('user_id')
 
-	for arg in request.args:
-		if arg not in Constants.TO_DO_DAILY_ARGS:
-			return jsonify("This api with the arg: %s is not supported" % (arg))
+	# for arg in request.args:
+	# 	if arg not in Constants.TO_DO_DAILY_ARGS:
+	# 		return jsonify("This api with the arg: %s is not supported" % (arg))
 
 	tododailyobj = ToDoDailyApiHandler(user_id = user_id)
 
@@ -261,6 +270,7 @@ def dailytodo(task_id = None):
 		return tododailyobj.put(task_id = task_id)
 
 	if request.method.lower() == "post":
+		print("Posting the request")
 		return tododailyobj.post(task_id = task_id)
 
 	if request.method.lower() == "get":
