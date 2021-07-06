@@ -4,17 +4,13 @@
     <div class = "content">
         <div class="row">
             <div class="col-md-12 text-center">
-                <h1>Welcome to NightFury Tech Academy.</h1>
-                
-                    <img src="{{ url_for('static',filename='images/night_fury_PNG59.png')}}" alt=NightFury style="width:100%;">
-                    <!-- <div class="centered" style="font-size:50px">Center</div> -->
-                
-                <!-- <div class="centered" style="font-size:50px">Center</div> -->
                 {% if session.get("username") %}
-                <h3>Let's get started.</h3>
+                <h3>Have a good day. Stay motivated! Stay Productive!.</h3>
                 {% else %}
-                <p>Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+                <h3>Already registered? <a href="{{ url_for('login') }}">Login</a></h3>
                 {% endif %}
+                    <img src="{{ url_for('static',filename='images/todotask.png')}}" alt=NightFury style="width:100%;">
+
             </div>
         </div>
     </div>
