@@ -8,7 +8,7 @@ Required version of python: >=3.7
 To install the dependencies, make sure you have pipenv install in your python packages. To install it, run the command `pip install pipenv`.
 To install mongodb, please follow the steps corresponding to your system.
 
-##Installing and Running the Flask Server
+## Installing and Running the Flask Server
 1. Clone the repository into you local machine using `git clone` command.
 2. Create the virtual env using the command `pipenv install` and enter it using `pipenv shell`.
 3. To run the flask server, run the command `flask run`. By default the server wil run on localhost and 5000 port id. You can pass the custom arguments to change this default setting.
